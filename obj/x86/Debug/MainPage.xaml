@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="SmartScheduler.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartScheduler"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    RequestedTheme="Dark"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <TextBlock x:ConnectionId='2' x:Name="TB_Title" HorizontalAlignment="Center" Margin="0,25,0,0" Text="Smart Scheduler" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontSize="32" RequestedTheme="Default"/>
+        <CalendarView Margin="1168,120,0,0" VerticalAlignment="Top"/>
+        <ListView HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,500">
+
+            <TextBlock x:ConnectionId='4' Name="TB_DaySchedule" FontSize="36" Text="Daily Schedule:"/>
+        </ListView>
+        <TextBlock HorizontalAlignment="Left" Margin="120,120,0,0" Text="Create New Item:" FontSize="36" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,180,0,0" Text="Date:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <CalendarDatePicker Margin="200,180,0,0" VerticalAlignment="Top" AllowDrop="True" PlaceholderText="Select a date" />
+        <TextBlock HorizontalAlignment="Left" Margin="130,220,0,0" Text="Time:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TimePicker Margin="200,220,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,265,0,0" Text="Type:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <ComboBox x:ConnectionId='3' Margin="200,270,0,0" Width="180" Name="CB_TypePicker"/>
+    </Grid>
+</Page>
+
