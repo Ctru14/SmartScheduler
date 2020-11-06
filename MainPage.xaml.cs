@@ -22,7 +22,17 @@ namespace SmartScheduler
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        int changed = 0;
+        public SmartSchedule schedule = new SmartSchedule();
+
+        private DateTime _selectedDate;
+        public DateTime selectedDate {
+            get { return _selectedDate; }
+            set
+            {
+                _selectedDate = value;
+                TB_DaySchedule.Text = "Schedule: " + selectedDate.ToString("d");
+            }
+        }
         public MainPage()
         {
             this.InitializeComponent();
@@ -32,18 +42,69 @@ namespace SmartScheduler
             CB_RepeatPicker.ItemsSource = Enum.GetValues(typeof(RepeatType)).Cast<RepeatType>().ToList();
             CB_DurHoursPicker.ItemsSource = SmartTask.hours;
             CB_DurMinsPicker.ItemsSource = SmartTask.mins;
-        }
 
-        private void CalendarView_CalendarViewDayItemChanging(CalendarView sender, CalendarViewDayItemChangingEventArgs args)
-        {
-            //TB_Title.Text = "Changed text!" + changed++ + args.Item;
-            //Console.WriteLine(args.Item);
+            selectedDate = DateTime.Now;
+
         }
 
         private void CV_MainCalendar_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
         {
-            TB_DaySchedule.Text = "Schedule: " + args.AddedDates.First().Date.ToString("d");
+            selectedDate = args.AddedDates.First().Date;
             CDP_NewItemDate.Date = args.AddedDates.First().Date;
+        }
+
+        private void PB_AddToSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            bool filled = true;
+            // Check to see if required fields are filled ijn
+            if (TB_NewTitle.Text.Length == 0)
+            {
+                filled = false;
+                // TODO: UPDATE THIS TO SHOW
+            }
+            if (!CDP_NewItemDate.Date.HasValue)
+            {
+                filled = false;
+                // TODO: UPDATE THIS TO SHOW
+            }
+            if (!TP_NewItemTime.SelectedTime.HasValue)
+            {
+                filled = false;
+                // TODO: UPDATE THIS TO SHOW
+            }
+            if (CB_RequiredPicker.SelectedValue == null)
+            {
+                filled = false;
+                // TODO: UPDATE THIS TO SHOW
+            }
+
+            if (!filled) return;
+
+            // Create SmartTask object out of the text fields
+            SmartTask newTask = new SmartTask();
+
+            // Get date
+            DateTimeOffset date = CDP_NewItemDate.Date.Value;
+            int hour = TP_NewItemTime.SelectedTime.Value.Hours;
+            int minute = TP_NewItemTime.SelectedTime.Value.Minutes;
+            DateTime when = new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
+
+
+            int durHour = (int)CB_DurHoursPicker.SelectedItem;
+            int durMinute = (int)CB_DurMinsPicker.SelectedItem;
+
+            newTask.taskType = (TaskType) CB_TypePicker.SelectedValue;
+            newTask.repeatType = (RepeatType) CB_RepeatPicker.SelectedValue;
+            newTask.when = when;
+            newTask.title = TB_NewTitle.Text;
+            newTask.description = TB_NewDescription.Text;
+            newTask.required = (YN) CB_RequiredPicker.SelectedValue;
+            newTask.timeRemaining = newTask.duration = new TimeSpan(durHour, durMinute, 0);
+            newTask.url = TB_NewURL.Text;
+
+            // Add to global schedule variable
+            schedule.AddTask(newTask);
+
         }
     }
 }

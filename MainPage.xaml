@@ -11,7 +11,7 @@
 
     <Grid>
         <TextBlock x:Name="TB_Title" HorizontalAlignment="Center" Margin="0,25,0,0" Text="Smart Scheduler" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontSize="32" RequestedTheme="Default"/>
-        <CalendarView SelectedDatesChanged="CV_MainCalendar_SelectedDatesChanged" Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left" CalendarViewDayItemChanging="CalendarView_CalendarViewDayItemChanging"/>
+        <CalendarView SelectedDatesChanged="CV_MainCalendar_SelectedDatesChanged" Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left"/>
         <TextBlock Name="TB_DaySchedule" FontSize="36" Text="Schedule:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="900,120,200,0"/>
 
 
@@ -19,7 +19,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,180,0,0" Text="Date:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <CalendarDatePicker Name="CDP_NewItemDate" Margin="200,180,0,0" VerticalAlignment="Top" AllowDrop="True" PlaceholderText="Select a date" />
         <TextBlock HorizontalAlignment="Left" Margin="130,220,0,0" Text="Time:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TimePicker Margin="200,220,0,0" VerticalAlignment="Top"/>
+        <TimePicker Name="TP_NewItemTime" Margin="200,220,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,260,0,0" Text="Duration:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="240,260,0,0" Width="80" Name="CB_DurHoursPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="325,265,0,0" Text="hrs" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
@@ -29,15 +29,16 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,300,0,0" Text="Type:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="200,300,0,0" Width="180" Name="CB_TypePicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,340,0,0" Text="Title:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="200" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewTitle" HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="200" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,380,0,0" Text="Desc:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
+        <TextBox Name="TB_NewDescription" HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,450,0,0" Text="URL:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,490,0,0" Text="Required:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="240,490,0,0" Width="140" Name="CB_RequiredPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
+        <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
 
     </Grid>
 </Page>

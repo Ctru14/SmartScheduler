@@ -11,7 +11,7 @@
 
     <Grid>
         <TextBlock x:ConnectionId='2' x:Name="TB_Title" HorizontalAlignment="Center" Margin="0,25,0,0" Text="Smart Scheduler" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontSize="32" RequestedTheme="Default"/>
-        <CalendarView x:ConnectionId='3'                                                             Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left"                                                                       />
+        <CalendarView x:ConnectionId='3'                                                             Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left"/>
         <TextBlock x:ConnectionId='4' Name="TB_DaySchedule" FontSize="36" Text="Schedule:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="900,120,200,0"/>
 
 
@@ -19,25 +19,26 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,180,0,0" Text="Date:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <CalendarDatePicker x:ConnectionId='5' Name="CDP_NewItemDate" Margin="200,180,0,0" VerticalAlignment="Top" AllowDrop="True" PlaceholderText="Select a date" />
         <TextBlock HorizontalAlignment="Left" Margin="130,220,0,0" Text="Time:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TimePicker Margin="200,220,0,0" VerticalAlignment="Top"/>
+        <TimePicker x:ConnectionId='6' Name="TP_NewItemTime" Margin="200,220,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,260,0,0" Text="Duration:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox x:ConnectionId='6' Margin="240,260,0,0" Width="80" Name="CB_DurHoursPicker"/>
+        <ComboBox x:ConnectionId='7' Margin="240,260,0,0" Width="80" Name="CB_DurHoursPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="325,265,0,0" Text="hrs" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
-        <ComboBox x:ConnectionId='7' Margin="360,260,0,0" Width="80" Name="CB_DurMinsPicker"/>
+        <ComboBox x:ConnectionId='8' Margin="360,260,0,0" Width="80" Name="CB_DurMinsPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="445,265,0,0" Text="mins" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="130,300,0,0" Text="Type:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox x:ConnectionId='8' Margin="200,300,0,0" Width="180" Name="CB_TypePicker"/>
+        <ComboBox x:ConnectionId='9' Margin="200,300,0,0" Width="180" Name="CB_TypePicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,340,0,0" Text="Title:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="200" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox x:ConnectionId='10' Name="TB_NewTitle" HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="200" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,380,0,0" Text="Desc:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
+        <TextBox x:ConnectionId='11' Name="TB_NewDescription" HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,450,0,0" Text="URL:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox x:ConnectionId='12' Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,490,0,0" Text="Required:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox x:ConnectionId='9' Margin="240,490,0,0" Width="140" Name="CB_RequiredPicker"/>
+        <ComboBox x:ConnectionId='13' Margin="240,490,0,0" Width="140" Name="CB_RequiredPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox x:ConnectionId='10' Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
+        <ComboBox x:ConnectionId='14' Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
+        <Button x:ConnectionId='15' Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24"                               />
 
     </Grid>
 </Page>

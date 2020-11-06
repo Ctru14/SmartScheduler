@@ -19,7 +19,7 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>D437858A66E4E854A8C551C3C9257A7C643D3798FBC30F1C0BD5BD507AC24F61</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>E0C5428E51B60C412FE918C6892196216BF5A63BE71BFD2944E89661412145DD</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9_1.0.0.0_x64__tzgsn4pew4d90</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9_tzgsn4pew4d90!App</RegisteredUserModeAppID>
     <RegisteredPackageID>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9</RegisteredPackageID>
@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-11-02T15:10:55.057</Modified>
+      <Modified>2020-11-06T15:02:11.900</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\SmartScheduler.exe">
       <PackagePath>entrypoint\SmartScheduler.exe</PackagePath>
-      <Modified>2020-11-02T15:10:52.820</Modified>
+      <Modified>2020-11-06T15:02:10.913</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x64.microsoft.netcore.universalwindowsplatform\6.2.10\runtimes\win10-x64\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -86,15 +86,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\SmartScheduler.xr.xml">
       <PackagePath>SmartScheduler.xr.xml</PackagePath>
-      <Modified>2020-11-02T15:10:52.077</Modified>
+      <Modified>2020-11-05T18:09:43.744</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2020-11-02T15:10:52.090</Modified>
+      <Modified>2020-11-06T15:02:10.674</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2020-11-02T15:10:52.090</Modified>
+      <Modified>2020-11-06T15:02:10.674</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.18362.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -102,11 +102,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2020-11-02T14:50:00.567</Modified>
+      <Modified>2020-11-05T17:54:25.860</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\Core\SmartScheduler.exe">
       <PackagePath>SmartScheduler.exe</PackagePath>
-      <Modified>2020-11-02T15:10:55.048</Modified>
+      <Modified>2020-11-06T15:02:11.891</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

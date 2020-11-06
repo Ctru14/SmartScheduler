@@ -37,25 +37,39 @@ namespace SmartScheduler
 
         public static readonly int[] mins = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
 
-        TaskType taskType;
+        public TaskType taskType { get; set; }
 
-        RepeatType repeatType;
+        public RepeatType repeatType { get; set; }
 
-        List<DateTime> customRepeat;
+        public List<DateTime> customRepeat { get; set; }
 
         // Time arguments functions differently for events and tasks
         //   TimedEvent: when = start time, duration = duration of event
         //   DeadlinedTask: when = deadline, duration = time to complete, timeRemaining = how much left
-        DateTime when; 
-        TimeSpan duration;
-        TimeSpan timeRemaining;
 
-        YN required;
+        public DateTime when { get; set; }
 
-        String title;
-        String description;
+        public TimeSpan duration { get; set; }
 
-        String url;
+        public TimeSpan timeRemaining { get; set; }
+
+        public YN required { get; set; }
+
+        public string title { get; set; }
+        
+        public string description { get; set; }
+
+        public string url { get; set; }
+
+        public override string ToString()
+        {
+            string str = this.taskType.ToString() + ":  ";
+            str += this.title;
+            str += (" " + this.when.ToString("g"));
+            if (taskType == TaskType.TimedEvent) str += (" Dur: " + this.duration);
+            return str;
+        }
+
 
     }
 }
