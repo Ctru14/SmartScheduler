@@ -20,6 +20,7 @@ namespace SmartScheduler
         {
             LinkedList<SmartTask> taskList;
             DateTime date = task.when.Date;
+
             // Add new task - inset into LinkedList 
             if (smartSchedule.TryGetValue(date, out taskList))
             {
@@ -67,5 +68,21 @@ namespace SmartScheduler
                 smartSchedule.Add(date, taskList);
             }
         }
-    }
-}
+
+        public int GetTaskCount(DateTime date)
+        {
+            LinkedList<SmartTask> taskList;
+            if (this.smartSchedule.TryGetValue(date, out taskList))
+            {
+                return taskList.Count;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+    } // End of class definition
+
+
+} // End of SmartScheduler namespace

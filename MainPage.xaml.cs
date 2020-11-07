@@ -23,6 +23,8 @@ namespace SmartScheduler
     public sealed partial class MainPage : Page
     {
         public SmartSchedule schedule = new SmartSchedule();
+        public int currentNumTasksInSchedule = 0;
+        public int nextEventID;
 
         private DateTime _selectedDate;
         public DateTime selectedDate {
@@ -31,11 +33,14 @@ namespace SmartScheduler
             {
                 _selectedDate = value;
                 TB_DaySchedule.Text = "Schedule: " + selectedDate.ToString("d");
+                syncScheduleViewer();
             }
         }
         public MainPage()
         {
             this.InitializeComponent();
+
+            nextEventID = 1; // TODO: read from global configuration file (permanent storage)
 
             CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
             CB_RequiredPicker.ItemsSource = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
@@ -81,7 +86,7 @@ namespace SmartScheduler
             if (!filled) return;
 
             // Create SmartTask object out of the text fields
-            SmartTask newTask = new SmartTask();
+            SmartTask newTask = new SmartTask(nextEventID++);
 
             // Get date
             DateTimeOffset date = CDP_NewItemDate.Date.Value;
@@ -105,6 +110,61 @@ namespace SmartScheduler
             // Add to global schedule variable
             schedule.AddTask(newTask);
 
+            if (when.Date == selectedDate)
+            {
+                LV_Schedule.Items.Add(newTask);
+            }
+
         }
-    }
+
+        public void syncScheduleViewer()
+        {
+            // Compare the number of events added to the schedule view to the selected day
+            LinkedList<SmartTask> taskList;
+            if (schedule.smartSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
+            {
+                // Some tasks exist for that day - see how many
+                if (currentNumTasksInSchedule != taskList.Count)
+                {
+                    // Tasks don't match! - update list view to reflect the schedule
+                    
+                    // Check each item in the taskList to see if it exists in the viewer
+                    for (int i = 0; i < taskList.Count; ++i)
+                    {
+                        // Check the ListView for this item, insert it to LV if it doesn't exist
+                        if (!LV_Schedule.Items.Contains(taskList.ElementAt(i)))
+                        {
+                            LV_Schedule.Items.Add(taskList.ElementAt(i));
+                        }
+                    }
+
+                    // Check each item in the ListView to see if it exists in the taskList
+                    for (int i = 0; i < LV_Schedule.Items.Count; ++i)
+                    {
+                        // Check the taskList for this item, delete it from LV it doesn't exist
+                        if (!taskList.Contains(LV_Schedule.Items.ElementAt(i)))
+                        {
+                            LV_Schedule.Items.Remove(i);
+                        }
+                    }
+
+                    // Sort ListView by descending date
+//                    LV_Schedule.Items.OrderBy(task => task.when)
+                }
+            }
+            else
+            {
+                // There are no tasks for the selected day! Clear the list view
+                for (int i = LV_Schedule.Items.Count - 1; i >= 0; --i)
+                {
+                    LV_Schedule.Items.RemoveAt(i);
+                }
+            }
+            
+        }
+
+
+    } // End of namespace
+
+
 }
