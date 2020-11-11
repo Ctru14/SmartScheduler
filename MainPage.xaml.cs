@@ -22,7 +22,7 @@ namespace SmartScheduler
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public SmartSchedule schedule = new SmartSchedule();
+        public SmartSchedule schedule;
         public int currentNumTasksInSchedule = 0;
         public int nextEventID;
 
@@ -33,7 +33,7 @@ namespace SmartScheduler
             {
                 _selectedDate = value;
                 TB_DaySchedule.Text = "Schedule: " + selectedDate.ToString("d");
-                syncScheduleViewer();
+                //syncScheduleViewer();
             }
         }
         public MainPage()
@@ -41,21 +41,26 @@ namespace SmartScheduler
             this.InitializeComponent();
 
             nextEventID = 1; // TODO: read from global configuration file (permanent storage)
+            schedule = new SmartSchedule();
 
             CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
             CB_RequiredPicker.ItemsSource = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
             CB_RepeatPicker.ItemsSource = Enum.GetValues(typeof(RepeatType)).Cast<RepeatType>().ToList();
             CB_DurHoursPicker.ItemsSource = SmartTask.hours;
             CB_DurMinsPicker.ItemsSource = SmartTask.mins;
-
             selectedDate = DateTime.Now;
+            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate.Date);
 
         }
 
         private void CV_MainCalendar_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
         {
-            selectedDate = args.AddedDates.First().Date;
-            CDP_NewItemDate.Date = args.AddedDates.First().Date;
+            if (args.AddedDates.Count > 0)
+            {
+                selectedDate = args.AddedDates.First().Date;
+                CDP_NewItemDate.Date = args.AddedDates.First().Date;
+            }
+            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
         }
 
         private void PB_AddToSchedule_Click(object sender, RoutedEventArgs e)
@@ -109,15 +114,17 @@ namespace SmartScheduler
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
-
-            if (when.Date == selectedDate)
+            if (selectedDate.Date == when.Date)
             {
-                LV_Schedule.Items.Add(newTask);
+                // TODO: Update the ListView viewer when adding a new task to the current date
+                LV_Schedule.ItemsSource = null;
+                LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
             }
 
         }
 
-        public void syncScheduleViewer()
+
+/*        public void syncScheduleViewer()
         {
             // Compare the number of events added to the schedule view to the selected day
             LinkedList<SmartTask> taskList;
@@ -149,7 +156,7 @@ namespace SmartScheduler
                     }
 
                     // Sort ListView by descending date
-//                    LV_Schedule.Items.OrderBy(task => task.when)
+                    LV_Schedule.Items.OrderBy(task => ((SmartTask)task).when);
                 }
             }
             else
@@ -161,7 +168,7 @@ namespace SmartScheduler
                 }
             }
             
-        }
+        } */
 
 
     } // End of namespace

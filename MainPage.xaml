@@ -44,8 +44,8 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:SmartTask">
                         <Grid>
-                            <TextBlock Width="80" Text="{x:Bind when.TimeOfDay}"/>
-                            <TextBlock Margin="80, 0, 0, 0 " Text="{x:Bind title}"/>
+                            <TextBlock Width="75" Text="{x:Bind TimeString}"/>
+                            <TextBlock Margin="75, 0, 0, 0 " Text="{x:Bind title}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

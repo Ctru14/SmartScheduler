@@ -69,10 +69,23 @@ namespace SmartScheduler
             }
         }
 
-        public int GetTaskCount(DateTime date)
+        public LinkedList<SmartTask> GetTastsAt(DateTime date)
         {
             LinkedList<SmartTask> taskList;
             if (this.smartSchedule.TryGetValue(date, out taskList))
+            {
+                return taskList;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public int GetTaskCount(DateTime date)
+        {
+            LinkedList<SmartTask> taskList = GetTastsAt(date.Date);
+            if (taskList != null)
             {
                 return taskList.Count;
             }

@@ -54,7 +54,21 @@ namespace SmartScheduler
         //   TimedEvent: when = start time, duration = duration of event
         //   DeadlinedTask: when = deadline, duration = time to complete, timeRemaining = how much left
 
-        public DateTime when { get; set; }
+        private DateTime _when;
+        public DateTime when
+        {
+            get { return _when; }
+            set
+            {
+                _when = value;
+                // Format the time of day string on a 12-hour cycle with AM/PM (hh:mm xM)
+                int hourValue = ((when.Hour % 12) == 0) ? 12 : (when.Hour % 12);
+                TimeString = (hourValue >= 10 ? "" : "  ") + hourValue + ":" + when.Minute + ((when.Hour > 11) ? " PM" : " AM");
+                    //when.TimeOfDay.ToString("hh\\:mm") + ((when.Hour > 11) ? " PM" : " AM");
+            }
+        }
+
+        public string TimeString;
 
         public TimeSpan duration { get; set; }
 

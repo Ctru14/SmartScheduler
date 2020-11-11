@@ -44,8 +44,8 @@
                 <ListView.ItemTemplate>
                     <DataTemplate                             >
                         <Grid x:ConnectionId='18'>
-                            <TextBlock x:ConnectionId='19' Width="80"                               />
-                            <TextBlock x:ConnectionId='20' Margin="80, 0, 0, 0 "                      />
+                            <TextBlock x:ConnectionId='19' Width="75"                           />
+                            <TextBlock x:ConnectionId='20' Margin="75, 0, 0, 0 "                      />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
