@@ -39,7 +39,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
         <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
-        <ScrollViewer Height="702" Margin="900,180,261,0" VerticalAlignment="Top">
+        <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top">
             <ListView Name="LV_Schedule">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:SmartTask">

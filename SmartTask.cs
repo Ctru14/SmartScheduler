@@ -63,7 +63,7 @@ namespace SmartScheduler
                 _when = value;
                 // Format the time of day string on a 12-hour cycle with AM/PM (hh:mm xM)
                 int hourValue = ((when.Hour % 12) == 0) ? 12 : (when.Hour % 12);
-                TimeString = (hourValue >= 10 ? "" : "  ") + hourValue + ":" + when.Minute + ((when.Hour > 11) ? " PM" : " AM");
+                TimeString = (hourValue >= 10 ? "" : "  ") + hourValue + ":" + (when.Minute < 10 ? "0" : "") + when.Minute + ((when.Hour > 11) ? " PM" : " AM");
                     //when.TimeOfDay.ToString("hh\\:mm") + ((when.Hour > 11) ? " PM" : " AM");
             }
         }
