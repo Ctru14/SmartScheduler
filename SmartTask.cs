@@ -34,6 +34,7 @@ namespace SmartScheduler
         public SmartTask(int newID)
         {
             this.ID = newID;
+            this.calendar = null;
         }
 
         public static readonly int[] hours = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -53,6 +54,8 @@ namespace SmartScheduler
         // Time arguments functions differently for events and tasks
         //   TimedEvent: when = start time, duration = duration of event
         //   DeadlinedTask: when = deadline, duration = time to complete, timeRemaining = how much left
+        
+        public string TimeString;
 
         private DateTime _when;
         public DateTime when
@@ -64,11 +67,8 @@ namespace SmartScheduler
                 // Format the time of day string on a 12-hour cycle with AM/PM (hh:mm xM)
                 int hourValue = ((when.Hour % 12) == 0) ? 12 : (when.Hour % 12);
                 TimeString = (hourValue >= 10 ? "" : "  ") + hourValue + ":" + (when.Minute < 10 ? "0" : "") + when.Minute + ((when.Hour > 11) ? " PM" : " AM");
-                    //when.TimeOfDay.ToString("hh\\:mm") + ((when.Hour > 11) ? " PM" : " AM");
             }
         }
-
-        public string TimeString;
 
         public TimeSpan duration { get; set; }
 
@@ -81,6 +81,8 @@ namespace SmartScheduler
         public string description { get; set; }
 
         public string url { get; set; }
+
+        public SmartSchedule calendar; // Reference to the calendar which owns the event
 
         public override string ToString()
         {

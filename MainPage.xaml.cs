@@ -66,29 +66,55 @@ namespace SmartScheduler
         private void PB_AddToSchedule_Click(object sender, RoutedEventArgs e)
         {
             bool filled = true;
-            // Check to see if required fields are filled ijn
+            // Check to see if required fields are filled in:
+
             if (TB_NewTitle.Text.Length == 0)
             {
                 filled = false;
-                // TODO: UPDATE THIS TO SHOW
-            }
+                TB_AsteriskTitle.Text = "*";
+            } 
+            else 
+                TB_AsteriskTitle.Text = ""; 
+
             if (!CDP_NewItemDate.Date.HasValue)
             {
                 filled = false;
-                // TODO: UPDATE THIS TO SHOW
-            }
+                TB_AsteriskDate.Text = "*";
+            } else 
+                TB_AsteriskDate.Text = "";
+
             if (!TP_NewItemTime.SelectedTime.HasValue)
             {
                 filled = false;
-                // TODO: UPDATE THIS TO SHOW
+                TB_AsteriskTime.Text = "*";
             }
+            else
+                TB_AsteriskTime.Text = "";
+
             if (CB_RequiredPicker.SelectedValue == null)
             {
                 filled = false;
-                // TODO: UPDATE THIS TO SHOW
+                TB_AsteriskRequired.Text = "*";
+            }
+            else
+                TB_AsteriskRequired.Text = "";
+
+            if (CB_RepeatPicker.SelectedValue == null)
+            {
+                filled = false;
+                TB_AsteriskRepeat.Text = "*";
+            }
+            else
+                TB_AsteriskRepeat.Text = "";
+
+
+            if (!filled)
+            {
+                TB_RequiredFields.Text = "The marked(*) fields are required.";
+                return;
             }
 
-            if (!filled) return;
+            TB_RequiredFields.Text = "";
 
             // Create SmartTask object out of the text fields
             SmartTask newTask = new SmartTask(nextEventID++);
@@ -114,6 +140,10 @@ namespace SmartScheduler
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
+
+            // Remove any failed task markers from UI
+
+
             if (selectedDate.Date == when.Date)
             {
                 // TODO: Update the ListView viewer when adding a new task to the current date
@@ -128,7 +158,7 @@ namespace SmartScheduler
         {
             // Compare the number of events added to the schedule view to the selected day
             LinkedList<SmartTask> taskList;
-            if (schedule.smartSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
+            if (schedule.taskSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
             {
                 // Some tasks exist for that day - see how many
                 if (currentNumTasksInSchedule != taskList.Count)

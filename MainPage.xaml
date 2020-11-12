@@ -39,18 +39,28 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
         <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
-        <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top">
+        <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top" VerticalScrollMode="Enabled">
             <ListView Name="LV_Schedule">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:SmartTask">
                         <Grid>
-                            <TextBlock Width="75" Text="{x:Bind TimeString}"/>
-                            <TextBlock Margin="75, 0, 0, 0 " Text="{x:Bind title}"/>
+                            <Rectangle Margin="0,0,0,0" Height="15" Width="15" Fill="{x:Bind calendar.color}" HorizontalAlignment="Left"/>
+                            <TextBlock Margin="20,0,0,0" Width="65" Text="{x:Bind TimeString}" HorizontalAlignment="Left"/>
+                            <TextBlock Margin="85,0,0,0" Text="{x:Bind title}" HorizontalAlignment="Left"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
+
+        <TextBlock Name="TB_AsteriskDate" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="328,182,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskTime" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="444,224,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskDuration" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="487,260,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskType" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="384,303,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskTitle" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="405,340,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskRequired" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="385,493,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskRepeat" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="420,534,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_RequiredFields" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="138,642,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="249" Foreground="Red" FontSize="16" TextAlignment="Left"/>
 
     </Grid>
 </Page>

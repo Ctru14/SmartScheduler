@@ -39,18 +39,28 @@
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox x:ConnectionId='14' Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
         <Button x:ConnectionId='15' Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24"                               />
-        <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top">
-            <ListView x:ConnectionId='16' Name="LV_Schedule">
+        <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top" VerticalScrollMode="Enabled">
+            <ListView x:ConnectionId='24' Name="LV_Schedule">
                 <ListView.ItemTemplate>
                     <DataTemplate                             >
-                        <Grid x:ConnectionId='18'>
-                            <TextBlock x:ConnectionId='19' Width="75"                           />
-                            <TextBlock x:ConnectionId='20' Margin="75, 0, 0, 0 "                      />
+                        <Grid x:ConnectionId='26'>
+                            <Rectangle x:ConnectionId='27' Margin="0,0,0,0" Height="15" Width="15"                                HorizontalAlignment="Left"/>
+                            <TextBlock x:ConnectionId='28' Margin="20,0,0,0" Width="65"                            HorizontalAlignment="Left"/>
+                            <TextBlock x:ConnectionId='29' Margin="85,0,0,0"                       HorizontalAlignment="Left"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
+
+        <TextBlock x:ConnectionId='16' Name="TB_AsteriskDate" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="328,182,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='17' Name="TB_AsteriskTime" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="444,224,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='18' Name="TB_AsteriskDuration" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="487,260,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='19' Name="TB_AsteriskType" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="384,303,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='20' Name="TB_AsteriskTitle" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="405,340,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='21' Name="TB_AsteriskRequired" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="385,493,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='22' Name="TB_AsteriskRepeat" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="420,534,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock x:ConnectionId='23' Name="TB_RequiredFields" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="138,642,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="249" Foreground="Red" FontSize="16" TextAlignment="Left"/>
 
     </Grid>
 </Page>
