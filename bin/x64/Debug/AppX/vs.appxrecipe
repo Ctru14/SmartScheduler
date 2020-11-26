@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Machine>DESKTOP-4S59TEA</Machine>
+    <Machine>CONNOR-BOOK3</Machine>
     <WindowsUser>ctru1</WindowsUser>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetOsVersion>10.0</TargetOsVersion>
@@ -19,7 +19,7 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>E0C5428E51B60C412FE918C6892196216BF5A63BE71BFD2944E89661412145DD</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>C1272CA2808B3BCB25A1C6D1C775A39AF67C43F51F6336D4A80FF2734BB1E953</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9_1.0.0.0_x64__tzgsn4pew4d90</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9_tzgsn4pew4d90!App</RegisteredUserModeAppID>
     <RegisteredPackageID>25c5fbda-e55d-4c2c-9c7b-17c81274d8b9</RegisteredPackageID>
@@ -30,83 +30,83 @@
     <AppXManifest Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-11-12T18:35:12.304</Modified>
+      <Modified>2020-11-26T13:46:18.899</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\SmartScheduler.exe">
       <PackagePath>entrypoint\SmartScheduler.exe</PackagePath>
-      <Modified>2020-11-12T18:35:11.416</Modified>
+      <Modified>2020-11-26T13:46:18.028</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x64.microsoft.netcore.universalwindowsplatform\6.2.10\runtimes\win10-x64\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
-      <Modified>2020-02-28T00:17:32.000</Modified>
+      <Modified>2020-02-27T23:17:32.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\bin\10.0.18362.0\XamlCompiler\Microsoft.UI.Xaml.Markup.winmd">
       <PackagePath>Microsoft.UI.Xaml.Markup.winmd</PackagePath>
-      <Modified>2019-03-18T23:36:56.000</Modified>
+      <Modified>2019-03-18T22:36:56.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
-      <Modified>2020-10-29T21:51:53.000</Modified>
+      <Modified>2020-10-29T21:51:53.031</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.966</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.974</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.975</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.976</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.978</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.979</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-08-07T21:48:08.000</Modified>
+      <Modified>2020-08-07T21:48:08.979</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\SmartScheduler.xr.xml">
       <PackagePath>SmartScheduler.xr.xml</PackagePath>
-      <Modified>2020-11-12T18:14:57.717</Modified>
+      <Modified>2020-11-12T18:14:57.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2020-11-12T18:35:11.190</Modified>
+      <Modified>2020-11-26T13:46:17.925</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2020-11-12T18:35:11.190</Modified>
+      <Modified>2020-11-26T13:46:17.924</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.18362.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
-      <Modified>2019-03-18T22:33:42.000</Modified>
+      <Modified>2019-03-18T21:33:42.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2020-11-12T17:55:33.728</Modified>
+      <Modified>2020-11-26T13:44:19.795</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\bin\x64\Debug\Core\SmartScheduler.exe">
       <PackagePath>SmartScheduler.exe</PackagePath>
-      <Modified>2020-11-12T18:35:12.295</Modified>
+      <Modified>2020-11-26T13:46:18.893</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -12,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -25,6 +28,7 @@ namespace SmartScheduler
         public SmartSchedule schedule;
         public int currentNumTasksInSchedule = 0;
         public int nextEventID;
+        public Random rng = new Random();
 
         private DateTime _selectedDate;
         public DateTime selectedDate {
@@ -41,7 +45,8 @@ namespace SmartScheduler
             this.InitializeComponent();
 
             nextEventID = 1; // TODO: read from global configuration file (permanent storage)
-            schedule = new SmartSchedule();
+            uint id = (uint)rng.Next(int.MinValue, int.MaxValue);
+            schedule = new SmartSchedule(id, "Primary", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
 
             CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
             CB_RequiredPicker.ItemsSource = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
@@ -117,7 +122,7 @@ namespace SmartScheduler
             TB_RequiredFields.Text = "";
 
             // Create SmartTask object out of the text fields
-            SmartTask newTask = new SmartTask(nextEventID++);
+            SmartTask newTask = new SmartTask(nextEventID++, schedule);
 
             // Get date
             DateTimeOffset date = CDP_NewItemDate.Date.Value;

@@ -43,3 +43,4 @@ C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\obj\x64\Debug\Multiple
 C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\obj\x64\Debug\ProjectArchitectures.txt
 C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\obj\x64\Debug\SmartScheduler.csprojAssemblyReference.cache
 C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\obj\x64\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885490160000000.json
+C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\obj\x64\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885454160000000.json

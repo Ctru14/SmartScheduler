@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Services.Maps.LocalSearch;
+using Windows.Storage;
 
 namespace SmartScheduler
 {
@@ -31,10 +32,11 @@ namespace SmartScheduler
 
     public class SmartTask
     {
-        public SmartTask(int newID)
+        public SmartTask(int newID, SmartSchedule cal)
         {
             this.ID = newID;
             this.calendar = null;
+
         }
 
         public static readonly int[] hours = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -84,6 +86,19 @@ namespace SmartScheduler
 
         public SmartSchedule calendar; // Reference to the calendar which owns the event
 
+        // Data for storing a task in permanent storage
+        private string storageID()
+        {
+            // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY>-<Up to first 8 chars of title>
+            string s = "";
+            s += (calendar.calID + "-");
+            s += (ID + "-");
+            s += (when.ToString("MM") + when.ToString("dd") + when.ToString("yyyy"));
+            s += title.Length > 8 ? title.Substring(0,9) : title;
+            return s;
+        }
+
+        
         public override string ToString()
         {
             string str = this.taskType.ToString() + ":  ";
