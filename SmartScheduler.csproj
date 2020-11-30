@@ -127,6 +127,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataStorageTransformations.cs" />
     <Compile Include="SmartSchedule.cs" />
     <Compile Include="SmartTask.cs" />
     <Compile Include="MainPage.xaml.cs">

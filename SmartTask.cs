@@ -89,7 +89,7 @@ namespace SmartScheduler
         // Data for storing a task in permanent storage
         private string storageID()
         {
-            // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY>-<Up to first 8 chars of title>
+            // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY(from 'when')>-<Up to first 8 chars of title>
             string s = "";
             s += (calendar.calID + "-");
             s += (ID + "-");

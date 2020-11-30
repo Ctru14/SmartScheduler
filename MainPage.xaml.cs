@@ -25,12 +25,16 @@ namespace SmartScheduler
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // Global MainPage variables
         public SmartSchedule schedule;
         public uint currentNumTasksInSchedule = 0;
-        public uint nextEventID;
+        public uint nextEventID = 1;
         public Random rng = new Random();
-        
-        // Storage Variables
+
+        // Storage system variables
+        public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public ApplicationDataCompositeValue startupSettings;
+        public string scheduleStorageID;
 
         private DateTime _selectedDate;
         public DateTime selectedDate {
@@ -47,19 +51,38 @@ namespace SmartScheduler
             this.InitializeComponent();
 
             // Try to read composite value "startup" from settings to either load or create data
+            startupSettings = (ApplicationDataCompositeValue)localSettings.Values["startup"];
 
+            if (startupSettings == null)
+            {
+                // Startup settings have never been created! Create a new Schedule data structure
+                
+                // Create new scjedule object
+                nextEventID = 1; // TODO: read from global configuration file (permanent storage)
+                uint calID = (uint)rng.Next(int.MinValue, int.MaxValue);
+                schedule = new SmartSchedule(calID, "Default", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
+                scheduleStorageID = schedule.storageID();
 
-            nextEventID = 1; // TODO: read from global configuration file (permanent storage)
-            uint id = (uint)rng.Next(int.MinValue, int.MaxValue);
-            schedule = new SmartSchedule(id, "Primary", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
+                // Store these values into the startup settings
+                startupSettings["nextEventID"] = nextEventID; // Events always start at 1
+                startupSettings["schedule"] = scheduleStorageID;
+                    
+            }
+            else
+            {
+                // Startup settings already exist! Load previous values into usable data structure
 
+            }
+
+            
+            // Initialize XAML components
             CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
             CB_RequiredPicker.ItemsSource = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
             CB_RepeatPicker.ItemsSource = Enum.GetValues(typeof(RepeatType)).Cast<RepeatType>().ToList();
             CB_DurHoursPicker.ItemsSource = SmartTask.hours;
             CB_DurMinsPicker.ItemsSource = SmartTask.mins;
-            selectedDate = DateTime.Now;
             LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate.Date);
+            selectedDate = DateTime.Now;
 
         }
 

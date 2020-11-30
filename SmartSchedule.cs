@@ -23,18 +23,23 @@ namespace SmartScheduler
 
         public uint numTasks;
 
-        public Windows.Storage.ApplicationDataContainer localData;
-
-        public Windows.Storage.StorageFolder localFolder;
-
-        public ApplicationDataCompositeValue storagePairs;
+        // Storage variables
+        public ApplicationDataContainer localData;
+        public StorageFolder localFolder;
+        public ApplicationDataCompositeValue scheduleStorageData;
 
         // Kets used to store/retrieve tasks from ApplicationData permanent storage entries
         public List<string> storageKeys;
 
-        public string Title { 
-            get; 
-            set;  // TODO - if title changes, update the app data storage string
+        private string _Title = null;
+        public string Title {
+            get { return _Title; }
+            set
+            {
+                // TODO - if title changes, update the app data storage string
+                if (_Title != null) {}
+                _Title = value;
+            }
         }
 
 
@@ -45,21 +50,21 @@ namespace SmartScheduler
             taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
             color = calColor;
             dateCreated = DateTime.Now;
-            calID = id;
+            calID = id; // Randomly created
             numTasks = 0;
 
             // Store it
             // https://docs.microsoft.com/en-us/windows/uwp/design/app-settings/store-and-retrieve-app-data
-            storagePairs = new ApplicationDataCompositeValue
+            scheduleStorageData = new ApplicationDataCompositeValue
             {
                 ["calID"] = calID,
                 ["numTasks"] = numTasks,
                 ["title"] = title,
-                ["color"] = calColor.ToString(),
-                ["dateCreated"] = dateCreated.ToString("s")
+                ["color"] = DataStorageTransformations.SolidColorBrush_ToStorageString(calColor),
+                ["dateCreated"] = DataStorageTransformations.DateTime_ToStorageString(dateCreated)
             };
 
-            //localData.Values[storageID()] = storagePairs;
+            
             
         }
 
@@ -146,8 +151,9 @@ namespace SmartScheduler
 
         public string storageID()
         {
-            // Format: <calID>-<Title up to 8 chars>
-            return "" + calID + (Title.Length > 8 ? Title.Substring(0, 9) : Title);
+            // Format: <calID>-<MMDDYYYY(from 'dateCreated')>-<Title up to 8 chars>
+            return "" + calID + "-" + (dateCreated.ToString("MM") + dateCreated.ToString("dd") + dateCreated.ToString("yyyy"))
+                + "-" + (Title.Length > 8 ? Title.Substring(0, 9) : Title);
         }
 
 
