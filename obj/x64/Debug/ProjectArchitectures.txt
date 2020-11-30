@@ -1,1 +1,0 @@
-C:\Users\ctru1\OneDrive\Documents\Projects\SmartScheduler\SmartScheduler.csproj;x64
