@@ -21,7 +21,11 @@ namespace SmartScheduler
 
         private readonly DateTime dateCreated;
 
-        public int numTasks;
+        public uint numTasks;
+
+        public Windows.Storage.ApplicationDataContainer localData;
+
+        public Windows.Storage.StorageFolder localFolder;
 
         public ApplicationDataCompositeValue storagePairs;
 
@@ -55,6 +59,8 @@ namespace SmartScheduler
                 ["dateCreated"] = dateCreated.ToString("s")
             };
 
+            //localData.Values[storageID()] = storagePairs;
+            
         }
 
         public void AddTask(SmartTask task)

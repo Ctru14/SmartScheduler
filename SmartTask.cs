@@ -32,7 +32,7 @@ namespace SmartScheduler
 
     public class SmartTask
     {
-        public SmartTask(int newID, SmartSchedule cal)
+        public SmartTask(uint newID, SmartSchedule cal)
         {
             this.ID = newID;
             this.calendar = null;
@@ -45,7 +45,7 @@ namespace SmartScheduler
 
         public static readonly int[] mins = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
 
-        public readonly int ID; // Global identifier for scheduled events
+        public readonly uint ID; // Global identifier for scheduled events
 
         public TaskType taskType { get; set; }
 

@@ -26,9 +26,11 @@ namespace SmartScheduler
     public sealed partial class MainPage : Page
     {
         public SmartSchedule schedule;
-        public int currentNumTasksInSchedule = 0;
-        public int nextEventID;
+        public uint currentNumTasksInSchedule = 0;
+        public uint nextEventID;
         public Random rng = new Random();
+        
+        // Storage Variables
 
         private DateTime _selectedDate;
         public DateTime selectedDate {
@@ -43,6 +45,9 @@ namespace SmartScheduler
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Try to read composite value "startup" from settings to either load or create data
+
 
             nextEventID = 1; // TODO: read from global configuration file (permanent storage)
             uint id = (uint)rng.Next(int.MinValue, int.MaxValue);
