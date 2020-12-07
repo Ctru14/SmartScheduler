@@ -24,9 +24,10 @@ namespace SmartScheduler
         public uint numTasks;
 
         // Storage variables
-        public ApplicationDataContainer localData;
+        public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public ApplicationDataContainer scheduleData;
         public StorageFolder localFolder;
-        public ApplicationDataCompositeValue scheduleStorageData;
+        public ApplicationDataCompositeValue scheduleStorageData; // DEPRECATED - use a container instead
 
         // Kets used to store/retrieve tasks from ApplicationData permanent storage entries
         public List<string> storageKeys;
@@ -50,22 +51,42 @@ namespace SmartScheduler
             taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
             color = calColor;
             dateCreated = DateTime.Now;
-            calID = id; // Randomly created
+            calID = id; // Randomly created 
             numTasks = 0;
 
-            // Store it
-            // https://docs.microsoft.com/en-us/windows/uwp/design/app-settings/store-and-retrieve-app-data
-            scheduleStorageData = new ApplicationDataCompositeValue
-            {
-                ["calID"] = calID,
-                ["numTasks"] = numTasks,
-                ["title"] = title,
-                ["color"] = DataStorageTransformations.SolidColorBrush_ToStorageString(calColor),
-                ["dateCreated"] = DataStorageTransformations.DateTime_ToStorageString(dateCreated)
-            };
+            // Store the new schedule data in the application storage
+            scheduleData = localSettings.CreateContainer(storageID(), ApplicationDataCreateDisposition.Always);
 
-            
-            
+            // Add values to the 
+            scheduleData.Values["calID"] = calID;
+            scheduleData.Values["numTasks"] = numTasks;
+            scheduleData.Values["title"] = Title;
+            scheduleData.Values["color"] =  DataStorageTransformations.SolidColorBrush_ToStorageString(color);
+            scheduleData.Values["dateCreated"] = DataStorageTransformations.DateTime_ToStorageString(dateCreated);
+        }
+
+        public SmartSchedule(string scheduleID)
+        {
+            // Load an existing schedule from application data storage given its ID string
+            try
+            {
+                // Retrieve the data from application memory (note: open existing)
+                scheduleData = localSettings.CreateContainer(scheduleID, ApplicationDataCreateDisposition.Existing);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error {e.Message}: Schedule at {scheduleID} does not exist in local storage!");
+                return;
+            }
+            // Fill in data from the container
+            calID = (uint)scheduleData.Values["calID"];
+            numTasks = (uint)scheduleData.Values["numTasks"];
+            Title = (string)scheduleData.Values["title"];
+            color = DataStorageTransformations.SolidColorBrush_FromStorageString((string)scheduleData.Values["color"]);
+            dateCreated = DataStorageTransformations.DateTime_FromStorageString((string)scheduleData.Values["dateCreated"]);
+            // TODO: Store and load tasks from memory!
+            taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
+
         }
 
         public void AddTask(SmartTask task)

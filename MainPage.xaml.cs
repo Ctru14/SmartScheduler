@@ -50,12 +50,16 @@ namespace SmartScheduler
         {
             this.InitializeComponent();
 
+            // TEMP: delete settings
+//            localSettings.Values.Remove("startup");
+
             // Try to read composite value "startup" from settings to either load or create data
             startupSettings = (ApplicationDataCompositeValue)localSettings.Values["startup"];
 
             if (startupSettings == null)
             {
                 // Startup settings have never been created! Create a new Schedule data structure
+                System.Diagnostics.Debug.WriteLine("Creating ApplicationData in localSettings for new schedule");
                 
                 // Create new scjedule object
                 nextEventID = 1; // TODO: read from global configuration file (permanent storage)
@@ -64,16 +68,21 @@ namespace SmartScheduler
                 scheduleStorageID = schedule.storageID();
 
                 // Store these values into the startup settings
+                startupSettings = new ApplicationDataCompositeValue();
                 startupSettings["nextEventID"] = nextEventID; // Events always start at 1
-                startupSettings["schedule"] = scheduleStorageID;
+                startupSettings["scheduleStorageID"] = scheduleStorageID;
+                localSettings.Values["startup"] = startupSettings;
                     
             }
             else
             {
                 // Startup settings already exist! Load previous values into usable data structure
+                System.Diagnostics.Debug.WriteLine("Loading schedule data from application storage");
+                nextEventID = (uint)startupSettings["nextEventID"];
+                scheduleStorageID = (string)startupSettings["scheduleStorageID"];
 
+                schedule = new SmartSchedule(scheduleStorageID);
             }
-
             
             // Initialize XAML components
             CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
@@ -101,6 +110,7 @@ namespace SmartScheduler
             bool filled = true;
             // Check to see if required fields are filled in:
 
+            // Title
             if (TB_NewTitle.Text.Length == 0)
             {
                 filled = false;
@@ -109,6 +119,7 @@ namespace SmartScheduler
             else 
                 TB_AsteriskTitle.Text = ""; 
 
+            // Date
             if (!CDP_NewItemDate.Date.HasValue)
             {
                 filled = false;
@@ -116,7 +127,35 @@ namespace SmartScheduler
             } else 
                 TB_AsteriskDate.Text = "";
 
-            if (!TP_NewItemTime.SelectedTime.HasValue)
+            // Task type
+            if (CB_TypePicker.SelectedItem == null)
+            {
+                filled = false;
+                TB_AsteriskType.Text = "*";
+            }
+            else
+                TB_AsteriskType.Text = "";
+
+            // Duration is not required for a FullDay event
+            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && CB_DurHoursPicker == null)
+            {
+                filled = false;
+                TB_AsteriskDuration.Text = "*";
+            }
+            else
+                TB_AsteriskDuration.Text = "";
+
+            // Duration is not required for a FullDay event
+            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && CB_DurMinsPicker == null)
+            {
+                filled = false;
+                TB_AsteriskDuration.Text = "*";
+            }
+            else
+                TB_AsteriskDuration.Text = "";
+
+            // Time
+            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && !TP_NewItemTime.SelectedTime.HasValue)
             {
                 filled = false;
                 TB_AsteriskTime.Text = "*";
@@ -124,6 +163,7 @@ namespace SmartScheduler
             else
                 TB_AsteriskTime.Text = "";
 
+            // Required?
             if (CB_RequiredPicker.SelectedValue == null)
             {
                 filled = false;
@@ -132,6 +172,7 @@ namespace SmartScheduler
             else
                 TB_AsteriskRequired.Text = "";
 
+            // Repeat
             if (CB_RepeatPicker.SelectedValue == null)
             {
                 filled = false;
@@ -146,22 +187,21 @@ namespace SmartScheduler
                 TB_RequiredFields.Text = "The marked(*) fields are required.";
                 return;
             }
-
+            // Remove failed text markers from UI
             TB_RequiredFields.Text = "";
 
             // Create SmartTask object out of the text fields
             SmartTask newTask = new SmartTask(nextEventID++, schedule);
 
-            // Get date
+            // Get full DateTime from composite boxes
             DateTimeOffset date = CDP_NewItemDate.Date.Value;
             int hour = TP_NewItemTime.SelectedTime.Value.Hours;
             int minute = TP_NewItemTime.SelectedTime.Value.Minutes;
             DateTime when = new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
 
-
+            // Get duration
             int durHour = (int)CB_DurHoursPicker.SelectedItem;
             int durMinute = (int)CB_DurMinsPicker.SelectedItem;
-
             newTask.taskType = (TaskType) CB_TypePicker.SelectedValue;
             newTask.repeatType = (RepeatType) CB_RepeatPicker.SelectedValue;
             newTask.when = when;
@@ -173,8 +213,6 @@ namespace SmartScheduler
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
-
-            // Remove any failed task markers from UI
 
 
             if (selectedDate.Date == when.Date)
