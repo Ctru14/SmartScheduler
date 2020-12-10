@@ -42,5 +42,18 @@ namespace SmartScheduler
             if (DateTime.TryParse(s, out dt)) return dt;
             else return new DateTime();
         }
+
+        // TimeSpan
+        public static string TimeSpan_ToStorageString(TimeSpan ts)
+        {
+            return ts.ToString();
+        }
+
+        public static TimeSpan TimeSpan_FromStorageString(string s)
+        {
+            TimeSpan ts;
+            if (TimeSpan.TryParse(s, out ts)) return ts;
+            else return new TimeSpan(0);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Services.Maps.LocalSearch;
 using Windows.Storage;
@@ -34,9 +35,56 @@ namespace SmartScheduler
     {
         public SmartTask(uint newID, SmartSchedule cal)
         {
+            // Creating a new SmartTask object given its fields
             this.ID = newID;
             this.calendar = null;
 
+        }
+
+        public SmartTask(ApplicationDataContainer tasksContainer, string key)
+        {
+            ApplicationDataCompositeValue taskComposite = null;
+            try
+            {
+                taskComposite = (ApplicationDataCompositeValue)tasksContainer.Values[key];
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Error: {e} could not load taskComposite value from key: {key}");
+                this.title = null;
+                return;
+            }
+            if (taskComposite == null)
+            {
+                Debug.WriteLine($"Task storage composite value in {tasksContainer.Name} was null for: {key}");
+                Debug.WriteLine($"Printing all ({tasksContainer.Values.Count}) values:");
+                foreach (object val in tasksContainer.Values)
+                {
+                    Debug.WriteLine(val);
+                }
+                this.title = null;
+                return;
+            }
+            // Create a new SmartTask object from program data stored in memory
+            try
+            {
+                this.ID = (uint)taskComposite["ID"];
+                this.taskType = (TaskType)taskComposite["taskType"];
+                this.repeatType = (RepeatType)taskComposite["ID"];
+                this.customRepeat = null; //TODO: do this - taskComposite["ID"];
+                this.when = DataStorageTransformations.DateTime_FromStorageString((string)taskComposite["when"]);
+                this.duration = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["duration"]);
+                this.timeRemaining = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["timeRemaining"]);
+                this.required = (YN)taskComposite["required"];
+                this.title = (string)taskComposite["title"];
+                this.description = (string)taskComposite["description"];
+                this.url = (string)taskComposite["url"];
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Error when reading task from memory: {e}\nPrinting {taskComposite.Count} task values:");
+                foreach (object val in taskComposite) Debug.WriteLine($"{val}");
+            }
         }
 
         public static readonly int[] hours = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -87,15 +135,33 @@ namespace SmartScheduler
         public SmartSchedule calendar; // Reference to the calendar which owns the event
 
         // Data for storing a task in permanent storage
-        private string storageID()
+        public string storageID()
         {
             // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY(from 'when')>-<Up to first 8 chars of title>
-            string s = "";
+            string s = "T-";
             s += (calendar.calID + "-");
             s += (ID + "-");
             s += (when.ToString("MM") + when.ToString("dd") + when.ToString("yyyy"));
             s += title.Length > 8 ? title.Substring(0,9) : title;
             return s;
+        }
+
+        public void storeTaskData(ApplicationDataContainer tasksContainer)
+        {
+            ApplicationDataCompositeValue currentTaskComposite = new ApplicationDataCompositeValue();
+            tasksContainer.Values[storageID()] = currentTaskComposite;
+            currentTaskComposite["ID"] = this.ID;
+            currentTaskComposite["taskType"] = (int)this.taskType;
+            currentTaskComposite["repeatType"] = (int)this.repeatType;
+            currentTaskComposite["customRepeat"] = "";
+            currentTaskComposite["when"] = DataStorageTransformations.DateTime_ToStorageString(this.when);
+            currentTaskComposite["duration"] = DataStorageTransformations.TimeSpan_ToStorageString(this.duration);
+            currentTaskComposite["timeRemaining"] = DataStorageTransformations.TimeSpan_ToStorageString(this.timeRemaining);
+            currentTaskComposite["required"] = (int)this.required;
+            currentTaskComposite["title"] = this.title;
+            currentTaskComposite["description"] = this.description;
+            currentTaskComposite["url"] = this.url;
+            currentTaskComposite["calendar"] = this.calendar.storageID();
         }
 
         

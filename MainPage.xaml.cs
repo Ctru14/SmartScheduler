@@ -33,7 +33,9 @@ namespace SmartScheduler
 
         // Storage system variables
         public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        public ApplicationDataCompositeValue startupSettings;
+        public ApplicationDataContainer startupSettings;
+        public ApplicationDataContainer scheduleData;
+        public StorageFolder taskDataContainer = ApplicationData.Current.LocalFolder;
         public string scheduleStorageID;
 
         private DateTime _selectedDate;
@@ -48,40 +50,50 @@ namespace SmartScheduler
         }
         public MainPage()
         {
+            bool opened = true;
             this.InitializeComponent();
 
-            // TEMP: delete settings
-//            localSettings.Values.Remove("startup");
+            // TEMP: delete settings - for debugging only
+            //localSettings.DeleteContainer("startup");
 
             // Try to read composite value "startup" from settings to either load or create data
-            startupSettings = (ApplicationDataCompositeValue)localSettings.Values["startup"];
-
-            if (startupSettings == null)
+            try
+            {
+                startupSettings = localSettings.CreateContainer("startup", ApplicationDataCreateDisposition.Existing);
+            }
+            catch (Exception e)
             {
                 // Startup settings have never been created! Create a new Schedule data structure
                 System.Diagnostics.Debug.WriteLine("Creating ApplicationData in localSettings for new schedule");
-                
+
+                opened = false;
+                startupSettings = localSettings.CreateContainer("startup", ApplicationDataCreateDisposition.Always);
+
                 // Create new scjedule object
                 nextEventID = 1; // TODO: read from global configuration file (permanent storage)
                 uint calID = (uint)rng.Next(int.MinValue, int.MaxValue);
-                schedule = new SmartSchedule(calID, "Default", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
+                schedule = new SmartSchedule(startupSettings, calID, "Default", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
                 scheduleStorageID = schedule.storageID();
 
                 // Store these values into the startup settings
-                startupSettings = new ApplicationDataCompositeValue();
-                startupSettings["nextEventID"] = nextEventID; // Events always start at 1
-                startupSettings["scheduleStorageID"] = scheduleStorageID;
-                localSettings.Values["startup"] = startupSettings;
+             //   startupSettings = new ApplicationDataCompositeValue();
+                startupSettings.Values["nextEventID"] = nextEventID; // Events always start at 1
+                startupSettings.Values["scheduleStorageID"] = scheduleStorageID;
+                scheduleData = startupSettings.CreateContainer(scheduleStorageID, ApplicationDataCreateDisposition.Always);
+                 //startupSettings.Values[scheduleStorageID] = scheduleData;
+                 //localSettings.Values["startup"] = startupSettings;
+                
                     
             }
-            else
+            if (opened)
             {
                 // Startup settings already exist! Load previous values into usable data structure
                 System.Diagnostics.Debug.WriteLine("Loading schedule data from application storage");
-                nextEventID = (uint)startupSettings["nextEventID"];
-                scheduleStorageID = (string)startupSettings["scheduleStorageID"];
+                nextEventID = (uint)startupSettings.Values["nextEventID"];
+                scheduleStorageID = (string)startupSettings.Values["scheduleStorageID"];
+                scheduleData = startupSettings.CreateContainer(scheduleStorageID, ApplicationDataCreateDisposition.Existing);
 
-                schedule = new SmartSchedule(scheduleStorageID);
+                schedule = new SmartSchedule(startupSettings, scheduleStorageID);
             }
             
             // Initialize XAML components

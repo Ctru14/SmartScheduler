@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.Storage;
@@ -24,13 +25,16 @@ namespace SmartScheduler
         public uint numTasks;
 
         // Storage variables
-        public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        //        public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public ApplicationDataContainer startupSettings;
         public ApplicationDataContainer scheduleData;
+        public ApplicationDataContainer tasksContainer;
         public StorageFolder localFolder;
         public ApplicationDataCompositeValue scheduleStorageData; // DEPRECATED - use a container instead
 
         // Kets used to store/retrieve tasks from ApplicationData permanent storage entries
         public List<string> storageKeys;
+        public string storageKeysString = ""; // Use ` as delimiter
 
         private string _Title = null;
         public string Title {
@@ -44,7 +48,7 @@ namespace SmartScheduler
         }
 
 
-        public SmartSchedule(uint id, string title, SolidColorBrush calColor)
+        public SmartSchedule(ApplicationDataContainer container, uint id, string title, SolidColorBrush calColor)
         {
             // Create a new schedule - give it a title and store it in the filesystem!
             Title = title;
@@ -53,9 +57,11 @@ namespace SmartScheduler
             dateCreated = DateTime.Now;
             calID = id; // Randomly created 
             numTasks = 0;
+            storageKeys = new List<string>(); // Stored as one continuous string separated by spaces in memory
+            startupSettings = container;
 
             // Store the new schedule data in the application storage
-            scheduleData = localSettings.CreateContainer(storageID(), ApplicationDataCreateDisposition.Always);
+            scheduleData = startupSettings.CreateContainer(storageID(), ApplicationDataCreateDisposition.Always);
 
             // Add values to the 
             scheduleData.Values["calID"] = calID;
@@ -63,19 +69,23 @@ namespace SmartScheduler
             scheduleData.Values["title"] = Title;
             scheduleData.Values["color"] =  DataStorageTransformations.SolidColorBrush_ToStorageString(color);
             scheduleData.Values["dateCreated"] = DataStorageTransformations.DateTime_ToStorageString(dateCreated);
+            scheduleData.Values["storageKeys"] = "";
+            tasksContainer = scheduleData.CreateContainer("tasks", ApplicationDataCreateDisposition.Always);
         }
 
-        public SmartSchedule(string scheduleID)
+        public SmartSchedule(ApplicationDataContainer container, string scheduleID)
         {
             // Load an existing schedule from application data storage given its ID string
+            taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
+            startupSettings = container;
             try
             {
                 // Retrieve the data from application memory (note: open existing)
-                scheduleData = localSettings.CreateContainer(scheduleID, ApplicationDataCreateDisposition.Existing);
+                scheduleData = startupSettings.CreateContainer(scheduleID, ApplicationDataCreateDisposition.Existing);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine($"Error {e.Message}: Schedule at {scheduleID} does not exist in local storage!");
+                Debug.WriteLine($"Error {e.Message}: Schedule at {scheduleID} does not exist in local storage!");
                 return;
             }
             // Fill in data from the container
@@ -84,12 +94,32 @@ namespace SmartScheduler
             Title = (string)scheduleData.Values["title"];
             color = DataStorageTransformations.SolidColorBrush_FromStorageString((string)scheduleData.Values["color"]);
             dateCreated = DataStorageTransformations.DateTime_FromStorageString((string)scheduleData.Values["dateCreated"]);
-            // TODO: Store and load tasks from memory!
-            taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
+            tasksContainer = scheduleData.CreateContainer("tasks", ApplicationDataCreateDisposition.Existing);
+
+            // Store and load tasks from memory!
+            string taskKeys = (string)scheduleData.Values["storageKeys"];
+            if (taskKeys.Length > 0)
+            {
+                // Only try to add tasks if a key exists
+                storageKeys = taskKeys.Split('`').ToList<string>();
+                taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
+                foreach (string key in storageKeys)
+                {
+                    SmartTask newTask = new SmartTask(tasksContainer, key);
+                    if (newTask.title != null)
+                    {
+                        this.AddTask(newTask, false);
+                    }
+                }
+            }
+            else
+            {
+                storageKeys = new List<string>(); // Stored as one continuous string separated by spaces in memory
+            }
 
         }
 
-        public void AddTask(SmartTask task)
+        public void AddTask(SmartTask task, bool newToStore = true)
         {
             LinkedList<SmartTask> taskList;
             DateTime date = task.when.Date;
@@ -142,6 +172,19 @@ namespace SmartScheduler
                 taskSchedule.Add(date, taskList);
             }
             numTasks++;
+
+
+            // Update the storage keys string
+            string storageKey = task.storageID();
+            this.storageKeysString += (storageKey + "`");
+            storageKeys.Add(storageKey);
+
+            // Store task in application data storage
+            if (newToStore)
+            {
+                scheduleData.Values["storageKeys"] = storageKeysString;
+                task.storeTaskData(tasksContainer);
+            }
         }
 
         public LinkedList<SmartTask> GetTastsAt(DateTime date)
@@ -173,7 +216,7 @@ namespace SmartScheduler
         public string storageID()
         {
             // Format: <calID>-<MMDDYYYY(from 'dateCreated')>-<Title up to 8 chars>
-            return "" + calID + "-" + (dateCreated.ToString("MM") + dateCreated.ToString("dd") + dateCreated.ToString("yyyy"))
+            return "C-" + calID + "-" + (dateCreated.ToString("MM") + dateCreated.ToString("dd") + dateCreated.ToString("yyyy"))
                 + "-" + (Title.Length > 8 ? Title.Substring(0, 9) : Title);
         }
 
