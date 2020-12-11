@@ -27,6 +27,7 @@
       <RootProperty Name="Width" />
       <RootProperty Name="Foreground" />
       <RootProperty Name="TextAlignment" />
+      <RootProperty Name="FontWeight" />
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.CalendarView">
       <RootProperty Name="Name" />
@@ -96,6 +97,11 @@
       <RootProperty Name="Width" />
       <RootProperty Name="Fill" />
       <RootProperty Name="HorizontalAlignment" />
+    </RootType>
+    <RootType FullName="Windows.UI.Xaml.Controls.StackPanel">
+      <RootProperty Name="Margin" />
+      <RootProperty Name="Orientation" />
+      <RootProperty Name="Children" />
     </RootType>
     <RootType FullName="Microsoft.Xaml.DirectUI.ProxyTypes.BindExtension" />
     <RootType FullName="SmartScheduler.MainPage" />

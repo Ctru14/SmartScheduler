@@ -46,7 +46,11 @@
                         <Grid>
                             <Rectangle Margin="0,0,0,0" Height="15" Width="15" Fill="{x:Bind calendar.color}" HorizontalAlignment="Left"/>
                             <TextBlock Margin="20,0,0,0" Width="65" Text="{x:Bind TimeString}" HorizontalAlignment="Left"/>
-                            <TextBlock Margin="85,0,0,0" Text="{x:Bind title}" HorizontalAlignment="Left"/>
+                            <StackPanel Margin="85,0,0,0" Orientation="Horizontal">
+                                <TextBlock x:Name="titleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="descBlock" Text="{x:Bind description}" Margin="5,0,0,0" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
