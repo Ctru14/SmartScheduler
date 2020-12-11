@@ -103,12 +103,15 @@ namespace SmartScheduler
                 // Only try to add tasks if a key exists
                 storageKeys = taskKeys.Split('`').ToList<string>();
                 taskSchedule = new Dictionary<DateTime, LinkedList<SmartTask>>();
-                foreach (string key in storageKeys)
+                foreach (string key in storageKeys.ToList())
                 {
-                    SmartTask newTask = new SmartTask(tasksContainer, key);
-                    if (newTask.title != null)
+                    if (key.Length > 0)
                     {
-                        this.AddTask(newTask, false);
+                        SmartTask newTask = new SmartTask(tasksContainer, key);
+                        if (newTask.title != null)
+                        {
+                            this.AddTask(newTask, false);
+                        }
                     }
                 }
             }

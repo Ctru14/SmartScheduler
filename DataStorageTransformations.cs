@@ -33,7 +33,7 @@ namespace SmartScheduler
         // DateTime
         public static string DateTime_ToStorageString(DateTime dt)
         {
-            return dt.ToString("u");
+            return dt.ToString();
         }
 
         public static DateTime DateTime_FromStorageString(string s)

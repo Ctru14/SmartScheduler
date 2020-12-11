@@ -69,14 +69,14 @@ namespace SmartScheduler
             try
             {
                 this.ID = (uint)taskComposite["ID"];
+                this.title = (string)taskComposite["title"];
                 this.taskType = (TaskType)taskComposite["taskType"];
-                this.repeatType = (RepeatType)taskComposite["ID"];
-                this.customRepeat = null; //TODO: do this - taskComposite["ID"];
+                this.repeatType = (RepeatType)taskComposite["repeatType"];
+                this.customRepeat = null; //TODO: do this - taskComposite["customRepeat"];
                 this.when = DataStorageTransformations.DateTime_FromStorageString((string)taskComposite["when"]);
                 this.duration = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["duration"]);
                 this.timeRemaining = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["timeRemaining"]);
                 this.required = (YN)taskComposite["required"];
-                this.title = (string)taskComposite["title"];
                 this.description = (string)taskComposite["description"];
                 this.url = (string)taskComposite["url"];
             }
@@ -149,7 +149,6 @@ namespace SmartScheduler
         public void storeTaskData(ApplicationDataContainer tasksContainer)
         {
             ApplicationDataCompositeValue currentTaskComposite = new ApplicationDataCompositeValue();
-            tasksContainer.Values[storageID()] = currentTaskComposite;
             currentTaskComposite["ID"] = this.ID;
             currentTaskComposite["taskType"] = (int)this.taskType;
             currentTaskComposite["repeatType"] = (int)this.repeatType;
@@ -162,6 +161,7 @@ namespace SmartScheduler
             currentTaskComposite["description"] = this.description;
             currentTaskComposite["url"] = this.url;
             currentTaskComposite["calendar"] = this.calendar.storageID();
+            tasksContainer.Values[storageID()] = currentTaskComposite;
         }
 
         
