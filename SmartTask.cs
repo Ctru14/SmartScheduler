@@ -135,7 +135,7 @@ namespace SmartScheduler
         public SmartSchedule calendar; // Reference to the calendar which owns the event
 
         // Data for storing a task in permanent storage
-        public string storageID()
+        public string StorageID()
         {
             // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY(from 'when')>-<Up to first 8 chars of title>
             string s = "T-";
@@ -146,7 +146,7 @@ namespace SmartScheduler
             return s;
         }
 
-        public void storeTaskData(ApplicationDataContainer tasksContainer)
+        public void StoreTaskData(ApplicationDataContainer tasksContainer)
         {
             ApplicationDataCompositeValue currentTaskComposite = new ApplicationDataCompositeValue();
             currentTaskComposite["ID"] = this.ID;
@@ -161,7 +161,7 @@ namespace SmartScheduler
             currentTaskComposite["description"] = this.description;
             currentTaskComposite["url"] = this.url;
             currentTaskComposite["calendar"] = this.calendar.storageID();
-            tasksContainer.Values[storageID()] = currentTaskComposite;
+            tasksContainer.Values[StorageID()] = currentTaskComposite;
         }
 
         
@@ -172,6 +172,12 @@ namespace SmartScheduler
             str += (" " + this.when.ToString("g"));
             if (taskType == TaskType.TimedEvent) str += (" Dur: " + this.duration);
             return str;
+        }
+
+        public void DeleteTask()
+        {
+            Debug.WriteLine($"Deleting task {StorageID()} from task class");
+            calendar.DeleteTask(this);
         }
 
 

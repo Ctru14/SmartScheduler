@@ -178,7 +178,7 @@ namespace SmartScheduler
 
 
             // Update the storage keys string
-            string storageKey = task.storageID();
+            string storageKey = task.StorageID();
             this.storageKeysString += (storageKey + "`");
             storageKeys.Add(storageKey);
 
@@ -186,7 +186,7 @@ namespace SmartScheduler
             if (newToStore)
             {
                 scheduleData.Values["storageKeys"] = storageKeysString;
-                task.storeTaskData(tasksContainer);
+                task.StoreTaskData(tasksContainer);
             }
         }
 
@@ -214,6 +214,12 @@ namespace SmartScheduler
             {
                 return 0;
             }
+        }
+
+        public void DeleteTask(SmartTask task)
+        {
+            Debug.WriteLine($"(UNFINISHED) Deleting task: {task.StorageID()} from schedule {this.storageID()}");
+            // Remove task from schedule and storage
         }
 
         public string storageID()

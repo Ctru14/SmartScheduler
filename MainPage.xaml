@@ -50,11 +50,11 @@
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content=".." Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+                            <Button Grid.Row="0" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" Content=".." Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Edit"/>
-                                        <MenuFlyoutItem Text="Delete"/>
+                                        <MenuFlyoutItem Text="Delete" Click="{x:Bind DeleteTask}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
