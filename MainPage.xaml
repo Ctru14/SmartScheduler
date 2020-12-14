@@ -40,16 +40,24 @@
         <ComboBox Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
         <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
         <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top" VerticalScrollMode="Enabled">
-            <ListView Name="LV_Schedule">
+            <ListView Name="LV_Schedule" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:SmartTask">
-                        <Grid>
-                            <Rectangle Margin="0,0,0,0" Height="15" Width="15" Fill="{x:Bind calendar.color}" HorizontalAlignment="Left"/>
-                            <TextBlock Margin="20,0,0,0" Width="65" Text="{x:Bind TimeString}" HorizontalAlignment="Left"/>
-                            <StackPanel Margin="85,0,0,0" Orientation="Horizontal">
-                                <TextBlock x:Name="titleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="descBlock" Text="{x:Bind description}" Margin="5,0,0,0" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Grid HorizontalAlignment="Stretch" Width="600" Margin="0,0,0,5">
+                            <StackPanel x:Name="SP_TaskData" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0" Orientation="Horizontal" Height="22">
+                                <Rectangle Margin="0,0,0,0" Height="18" Width="18" Fill="{x:Bind calendar.color}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBlock Margin="5,0,0,0" Text="{x:Bind TimeString}" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </StackPanel>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content=".." Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Edit"/>
+                                        <MenuFlyoutItem Text="Delete"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
                             
                         </Grid>
                     </DataTemplate>
