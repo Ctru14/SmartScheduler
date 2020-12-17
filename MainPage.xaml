@@ -58,7 +58,6 @@
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
-                            
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

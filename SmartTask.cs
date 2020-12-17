@@ -160,7 +160,7 @@ namespace SmartScheduler
             currentTaskComposite["title"] = this.title;
             currentTaskComposite["description"] = this.description;
             currentTaskComposite["url"] = this.url;
-            currentTaskComposite["calendar"] = this.calendar.storageID();
+            currentTaskComposite["calendar"] = this.calendar.StorageID();
             tasksContainer.Values[StorageID()] = currentTaskComposite;
         }
 
@@ -176,8 +176,11 @@ namespace SmartScheduler
 
         public void DeleteTask()
         {
-            Debug.WriteLine($"Deleting task {StorageID()} from task class");
-            calendar.DeleteTask(this);
+            Debug.WriteLine($"Deleting task {StorageID()} from within task class");
+
+            // Remove task's data from calendar and storage
+            if (!calendar.DeleteTask(this)) Debug.WriteLine($"Error deleting task {StorageID()} from {calendar.StorageID()}");
+
         }
 
 

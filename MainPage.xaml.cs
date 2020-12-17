@@ -73,7 +73,7 @@ namespace SmartScheduler
                 nextEventID = 1; // TODO: read from global configuration file (permanent storage)
                 uint calID = (uint)rng.Next(int.MinValue, int.MaxValue);
                 schedule = new SmartSchedule(startupSettings, calID, "Default", new SolidColorBrush(Color.FromArgb(0xFF, 0x10, 0xEE, 0xEE)));
-                scheduleStorageID = schedule.storageID();
+                scheduleStorageID = schedule.StorageID();
 
                 // Store these values into the startup settings
              //   startupSettings = new ApplicationDataCompositeValue();

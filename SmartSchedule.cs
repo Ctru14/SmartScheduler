@@ -34,7 +34,17 @@ namespace SmartScheduler
 
         // Kets used to store/retrieve tasks from ApplicationData permanent storage entries
         public List<string> storageKeys;
-        public string storageKeysString = ""; // Use ` as delimiter
+        public string storageKeysString // Use ` as delimiter
+        {
+            get
+            {
+                string keys = "";
+                foreach (string s in storageKeys.ToArray())
+                    keys += s + "`";
+                if (keys.Length > 0) keys = keys.Substring(0, keys.Length - 1);
+                return keys;
+            }
+        }
 
         private string _Title = null;
         public string Title {
@@ -61,9 +71,9 @@ namespace SmartScheduler
             startupSettings = container;
 
             // Store the new schedule data in the application storage
-            scheduleData = startupSettings.CreateContainer(storageID(), ApplicationDataCreateDisposition.Always);
+            scheduleData = startupSettings.CreateContainer(StorageID(), ApplicationDataCreateDisposition.Always);
 
-            // Add values to the 
+            // Add values to the app data storage
             scheduleData.Values["calID"] = calID;
             scheduleData.Values["numTasks"] = numTasks;
             scheduleData.Values["title"] = Title;
@@ -177,14 +187,12 @@ namespace SmartScheduler
             numTasks++;
 
 
-            // Update the storage keys string
-            string storageKey = task.StorageID();
-            this.storageKeysString += (storageKey + "`");
-            storageKeys.Add(storageKey);
-
             // Store task in application data storage
             if (newToStore)
             {
+                // Update the storage keys string
+                string storageKey = task.StorageID();
+                storageKeys.Add(storageKey);
                 scheduleData.Values["storageKeys"] = storageKeysString;
                 task.StoreTaskData(tasksContainer);
             }
@@ -216,13 +224,71 @@ namespace SmartScheduler
             }
         }
 
-        public void DeleteTask(SmartTask task)
+        public bool DeleteTask(SmartTask task) // Deletes a task from app memory then removes it from the SmartSchedule data structure
         {
-            Debug.WriteLine($"(UNFINISHED) Deleting task: {task.StorageID()} from schedule {this.storageID()}");
-            // Remove task from schedule and storage
+            bool status = true; // Return value for whether or not it succeeded
+            string taskID = task.StorageID();
+            string scheduleID = this.StorageID();
+
+            Debug.WriteLine($"(UNFINISHED) Deleting task: {taskID} from schedule {scheduleID}");
+            
+            // Retrieve the data from application memory (note: open existing)
+            scheduleData = startupSettings.CreateContainer(scheduleID, ApplicationDataCreateDisposition.Existing);
+
+            // Remove task key from storage keys
+            if (storageKeys.Contains(taskID)) storageKeys.Remove(taskID);
+            else
+            {
+                Debug.WriteLine($"Unexpected error: {taskID} not found in storage keys!");
+                status = false;
+            }
+            scheduleData.Values.Remove("storageKeys");
+            scheduleData.Values["storageKeys"] = storageKeysString;
+
+            // Remove task from app storage
+            try
+            {
+                tasksContainer.DeleteContainer(taskID);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Error in task delete from SmartSchedule: Task container {taskID} was not found.\nException message: {e.Message}");
+            }
+
+            // Remove task from SmartSchedule - return value represents whether or not the remove was successful
+            status = removeTaskFromSchedule(task) && status;
+
+            return status;
+
         }
 
-        public string storageID()
+        public bool removeTaskFromSchedule(SmartTask task) // Returns: T/F on whether or not the remove was successful
+        {
+            LinkedList<SmartTask> taskList;
+            DateTime date = task.when.Date;
+
+            // Add new task - inset into LinkedList 
+            if (taskSchedule.TryGetValue(date, out taskList))
+            {
+                taskList.Remove(task);
+
+                // Check if that was the only task for that date - if so, remove the list
+                if (taskList.Count == 0)
+                {
+                    if (!taskSchedule.Remove(date)) Debug.WriteLine($"Error removing empty schedule at date {date}");
+                }
+
+                return true;
+            }
+            else
+            {
+                Debug.WriteLine($"Remove Task Error: Task list not found for date {date}");
+                return false;
+            }
+
+        }
+
+        public string StorageID()
         {
             // Format: <calID>-<MMDDYYYY(from 'dateCreated')>-<Title up to 8 chars>
             return "C-" + calID + "-" + (dateCreated.ToString("MM") + dateCreated.ToString("dd") + dateCreated.ToString("yyyy"))
