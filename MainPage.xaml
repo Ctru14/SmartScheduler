@@ -53,8 +53,17 @@
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" Content=".." Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Edit"/>
-                                        <MenuFlyoutItem Text="Delete" Click="{x:Bind DeleteTask}"/>
+                                        <MenuFlyoutSubItem Text="Edit" Icon="Edit" Tapped="PB_EditFlyoutShowFlyout" IsHoldingEnabled="False" IsRightTapEnabled="False" IsDoubleTapEnabled="False">
+                                            <FlyoutBase.AttachedFlyout>
+                                                <Flyout>
+                                                    <StackPanel Orientation="Vertical">
+                                                        <TextBlock Text="Edit task:"/>
+                                                        <TextBox Text="you should change me!"/>
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </MenuFlyoutSubItem>
+                                        <MenuFlyoutItem Text="Delete" Icon="Delete" Click="PB_DeleteSelectedTask"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>

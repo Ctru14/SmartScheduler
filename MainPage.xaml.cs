@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Windows.Foundation;
@@ -236,52 +237,69 @@ namespace SmartScheduler
 
         }
 
-
-/*        public void syncScheduleViewer()
+        private void PB_DeleteSelectedTask(object sender, RoutedEventArgs e)
         {
-            // Compare the number of events added to the schedule view to the selected day
-            LinkedList<SmartTask> taskList;
-            if (schedule.taskSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
-            {
-                // Some tasks exist for that day - see how many
-                if (currentNumTasksInSchedule != taskList.Count)
+            // Deletes the task whose flyout menu was selected
+            ((SmartTask)((MenuFlyoutItem)sender).DataContext).DeleteTask();
+
+            // Refreshes the schedule viewer display to remove the task
+            LV_Schedule.ItemsSource = null;
+            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
+        }
+
+        private void PB_EditFlyoutShowFlyout(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+
+
+
+        /*        public void syncScheduleViewer()
                 {
-                    // Tasks don't match! - update list view to reflect the schedule
-                    
-                    // Check each item in the taskList to see if it exists in the viewer
-                    for (int i = 0; i < taskList.Count; ++i)
+                    // Compare the number of events added to the schedule view to the selected day
+                    LinkedList<SmartTask> taskList;
+                    if (schedule.taskSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
                     {
-                        // Check the ListView for this item, insert it to LV if it doesn't exist
-                        if (!LV_Schedule.Items.Contains(taskList.ElementAt(i)))
+                        // Some tasks exist for that day - see how many
+                        if (currentNumTasksInSchedule != taskList.Count)
                         {
-                            LV_Schedule.Items.Add(taskList.ElementAt(i));
+                            // Tasks don't match! - update list view to reflect the schedule
+
+                            // Check each item in the taskList to see if it exists in the viewer
+                            for (int i = 0; i < taskList.Count; ++i)
+                            {
+                                // Check the ListView for this item, insert it to LV if it doesn't exist
+                                if (!LV_Schedule.Items.Contains(taskList.ElementAt(i)))
+                                {
+                                    LV_Schedule.Items.Add(taskList.ElementAt(i));
+                                }
+                            }
+
+                            // Check each item in the ListView to see if it exists in the taskList
+                            for (int i = 0; i < LV_Schedule.Items.Count; ++i)
+                            {
+                                // Check the taskList for this item, delete it from LV it doesn't exist
+                                if (!taskList.Contains(LV_Schedule.Items.ElementAt(i)))
+                                {
+                                    LV_Schedule.Items.Remove(i);
+                                }
+                            }
+
+                            // Sort ListView by descending date
+                            LV_Schedule.Items.OrderBy(task => ((SmartTask)task).when);
+                        }
+                    }
+                    else
+                    {
+                        // There are no tasks for the selected day! Clear the list view
+                        for (int i = LV_Schedule.Items.Count - 1; i >= 0; --i)
+                        {
+                            LV_Schedule.Items.RemoveAt(i);
                         }
                     }
 
-                    // Check each item in the ListView to see if it exists in the taskList
-                    for (int i = 0; i < LV_Schedule.Items.Count; ++i)
-                    {
-                        // Check the taskList for this item, delete it from LV it doesn't exist
-                        if (!taskList.Contains(LV_Schedule.Items.ElementAt(i)))
-                        {
-                            LV_Schedule.Items.Remove(i);
-                        }
-                    }
-
-                    // Sort ListView by descending date
-                    LV_Schedule.Items.OrderBy(task => ((SmartTask)task).when);
-                }
-            }
-            else
-            {
-                // There are no tasks for the selected day! Clear the list view
-                for (int i = LV_Schedule.Items.Count - 1; i >= 0; --i)
-                {
-                    LV_Schedule.Items.RemoveAt(i);
-                }
-            }
-            
-        } */
+                } */
 
 
     } // End of namespace

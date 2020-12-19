@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
 using Windows.Storage;
 
 namespace SmartScheduler
@@ -257,6 +258,10 @@ namespace SmartScheduler
 
             // Remove task from SmartSchedule - return value represents whether or not the remove was successful
             status = removeTaskFromSchedule(task) && status;
+
+            // Update the UI to reflect a new task added to the schedule
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(main_LV_schedule.ItemsSource)));
+           
 
             return status;
 
