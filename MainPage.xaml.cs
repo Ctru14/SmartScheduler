@@ -240,7 +240,7 @@ namespace SmartScheduler
         private void PB_DeleteSelectedTask(object sender, RoutedEventArgs e)
         {
             // Deletes the task whose flyout menu was selected
-            ((SmartTask)((MenuFlyoutItem)sender).DataContext).DeleteTask();
+            ((SmartTask)((Button)sender).DataContext).DeleteTask();
 
             // Refreshes the schedule viewer display to remove the task
             LV_Schedule.ItemsSource = null;

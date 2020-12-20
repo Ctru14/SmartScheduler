@@ -50,21 +50,37 @@
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <Button Grid.Row="0" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" Content=".." Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+                            <Button Grid.Row="0" Grid.Column="1" Margin="0,0,5,0" HorizontalAlignment="Right" Content="Delete" Click="PB_DeleteSelectedTask" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            <Button Grid.Row="0" Grid.Column="1" Margin="0,0,70,0" HorizontalAlignment="Right" Content="Edit" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
                                 <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutSubItem Text="Edit" Icon="Edit" Tapped="PB_EditFlyoutShowFlyout" IsHoldingEnabled="False" IsRightTapEnabled="False" IsDoubleTapEnabled="False">
-                                            <FlyoutBase.AttachedFlyout>
-                                                <Flyout>
-                                                    <StackPanel Orientation="Vertical">
-                                                        <TextBlock Text="Edit task:"/>
-                                                        <TextBox Text="you should change me!"/>
-                                                    </StackPanel>
-                                                </Flyout>
-                                            </FlyoutBase.AttachedFlyout>
-                                        </MenuFlyoutSubItem>
-                                        <MenuFlyoutItem Text="Delete" Icon="Delete" Click="PB_DeleteSelectedTask"/>
-                                    </MenuFlyout>
+                                    <Flyout>
+                                        <Grid MinWidth="150" MaxWidth="300">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition MinHeight="35" MaxHeight="85"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition MinWidth="150" MaxWidth="300"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Editing Task" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind title}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Description:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Bind description}" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MinHeight="35" MaxHeight="65" MinWidth="150" MaxLength="200"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Date:" VerticalAlignment="Center"/>
+                                            
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Time:" VerticalAlignment="Center"/>
+                                            <Viewbox Grid.Row="4" Grid.Column="1" Width="200" Height="35" >
+                                                <TimePicker DataContext="{x:Bind when.TimeOfDay}"/>
+                                            </Viewbox>
+
+                                        </Grid>
+                                    </Flyout>
                                 </Button.Flyout>
                             </Button>
                         </Grid>
@@ -72,7 +88,6 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
-
         <TextBlock Name="TB_AsteriskDate" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="328,182,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
         <TextBlock Name="TB_AsteriskTime" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="444,224,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
         <TextBlock Name="TB_AsteriskDuration" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="487,260,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
@@ -81,6 +96,6 @@
         <TextBlock Name="TB_AsteriskRequired" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="385,493,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
         <TextBlock Name="TB_AsteriskRepeat" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="420,534,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
         <TextBlock Name="TB_RequiredFields" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="138,642,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="249" Foreground="Red" FontSize="16" TextAlignment="Left"/>
-
+        
     </Grid>
 </Page>
