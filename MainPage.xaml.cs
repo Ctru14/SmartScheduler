@@ -226,9 +226,8 @@ namespace SmartScheduler
 
             if (selectedDate.Date == when.Date)
             {
-                // TODO: Update the ListView viewer when adding a new task to the current date
-                LV_Schedule.ItemsSource = null;
-                LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
+                //Update the ListView viewer when adding a new task to the current date
+                RefreshScheduleView();
             }
 
         }
@@ -239,8 +238,7 @@ namespace SmartScheduler
             ((SmartTask)((Button)sender).DataContext).DeleteTask();
 
             // Refreshes the schedule viewer display to remove the task
-            LV_Schedule.ItemsSource = null;
-            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
+            RefreshScheduleView();
         }
 
         private void PB_EditFlyoutShowFlyout(object sender, TappedRoutedEventArgs e)
@@ -284,6 +282,11 @@ namespace SmartScheduler
                 Debug.WriteLine($"Exception thrown in task update: {err.Message}");
             }
 
+            RefreshScheduleView();
+        }
+
+        public void RefreshScheduleView()
+        {
             // Refreshes the schedule viewer display
             LV_Schedule.ItemsSource = null;
             LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
