@@ -25,6 +25,10 @@ namespace SmartScheduler
 
         public uint numTasks;
 
+        public List<TaskType> taskTypeList = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
+        public List<YN> ynList = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
+        public List<RepeatType> repeatTypeList = Enum.GetValues(typeof(RepeatType)).Cast<RepeatType>().ToList();
+        
         // Storage variables
         //        public ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public ApplicationDataContainer startupSettings;
@@ -131,6 +135,29 @@ namespace SmartScheduler
                 storageKeys = new List<string>(); // Stored as one continuous string separated by spaces in memory
             }
 
+        }
+
+        // Creates and returns the SmartTask object in the respected schedule, but DOES NOT ADD IT TO THE SCHEDULE
+        public SmartTask CreateTask(uint eventID, DateTimeOffset date, int hour, int minute, int durHour, int durMinute, TaskType taskType, RepeatType repeatType, string title, string description, YN required, string url)
+        {
+            // Create SmartTask object out of the text fields
+            SmartTask newTask = new SmartTask(eventID, this);
+
+            // Get full DateTime from composite boxes
+            DateTime when = new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
+
+            // Get duration
+            newTask.taskType = taskType;
+            newTask.repeatType = repeatType;
+            newTask.when = when;
+            newTask.title = title;
+            newTask.description = description;
+            newTask.required = required;
+            newTask.timeRemaining = newTask.duration = new TimeSpan(durHour, durMinute, 0);
+            newTask.url = url;
+
+            // Creates the SmartTask item
+            return newTask;
         }
 
         public void AddTask(SmartTask task, bool newToStore = true)
@@ -262,7 +289,6 @@ namespace SmartScheduler
             // Update the UI to reflect a new task added to the schedule
             //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(main_LV_schedule.ItemsSource)));
            
-
             return status;
 
         }

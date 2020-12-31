@@ -98,9 +98,9 @@ namespace SmartScheduler
             }
             
             // Initialize XAML components
-            CB_TypePicker.ItemsSource = Enum.GetValues(typeof(TaskType)).Cast<TaskType>().ToList();
-            CB_RequiredPicker.ItemsSource = Enum.GetValues(typeof(YN)).Cast<YN>().ToList();
-            CB_RepeatPicker.ItemsSource = Enum.GetValues(typeof(RepeatType)).Cast<RepeatType>().ToList();
+            CB_TypePicker.ItemsSource = schedule.taskTypeList;
+            CB_RequiredPicker.ItemsSource = schedule.ynList;
+            CB_RepeatPicker.ItemsSource = schedule.repeatTypeList;
             CB_DurHoursPicker.ItemsSource = SmartTask.hours;
             CB_DurMinsPicker.ItemsSource = SmartTask.mins;
             LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate.Date);
@@ -204,7 +204,6 @@ namespace SmartScheduler
             TB_RequiredFields.Text = "";
 
             // Create SmartTask object out of the text fields
-            SmartTask newTask = new SmartTask(nextEventID++, schedule);
 
             // Get full DateTime from composite boxes
             DateTimeOffset date = CDP_NewItemDate.Date.Value;
@@ -215,18 +214,15 @@ namespace SmartScheduler
             // Get duration
             int durHour = (int)CB_DurHoursPicker.SelectedItem;
             int durMinute = (int)CB_DurMinsPicker.SelectedItem;
-            newTask.taskType = (TaskType) CB_TypePicker.SelectedValue;
-            newTask.repeatType = (RepeatType) CB_RepeatPicker.SelectedValue;
-            newTask.when = when;
-            newTask.title = TB_NewTitle.Text;
-            newTask.description = TB_NewDescription.Text;
-            newTask.required = (YN) CB_RequiredPicker.SelectedValue;
-            newTask.timeRemaining = newTask.duration = new TimeSpan(durHour, durMinute, 0);
-            newTask.url = TB_NewURL.Text;
+            TaskType taskType = (TaskType) CB_TypePicker.SelectedValue;
+            RepeatType repeatType = (RepeatType) CB_RepeatPicker.SelectedValue;
+            YN required = (YN) CB_RequiredPicker.SelectedValue;
+
+            // Create a new task from the schedule
+            SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, TB_NewTitle.Text, TB_NewDescription.Text, required, TB_NewURL.Text);
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
-
 
             if (selectedDate.Date == when.Date)
             {
@@ -252,54 +248,47 @@ namespace SmartScheduler
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
+        private void PB_UpdateSelectedTask(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine($"Updating task: {(SmartTask)((Button)sender).DataContext}");
 
+            // Get XAML items from Grid
+            Grid elements = (Grid)((Button)sender).Parent;
 
+            // Retrieve each field from the edit menu
+            try
+            {
+                DateTimeOffset date = (DateTimeOffset)((CalendarDatePicker)elements.FindName("CDP_edit_date")).Date;
+                int hour = (int)((TimePicker)elements.FindName("TP_edit_time")).SelectedTime.Value.Hours;
+                int minute = (int)((TimePicker)elements.FindName("TP_edit_time")).SelectedTime.Value.Minutes;
+                int durHour = (int)((ComboBox)elements.FindName("TB_edit_durHours")).SelectedItem;
+                int durMinute = (int)((ComboBox)elements.FindName("TB_edit_durMins")).SelectedItem;
+                TaskType taskType = (TaskType)((ComboBox)elements.FindName("CB_edit_taskType")).SelectedItem;
+                RepeatType repeatType = (RepeatType)((ComboBox)elements.FindName("CB_edit_repeat")).SelectedItem;
+                string title = ((TextBox)elements.FindName("TB_edit_title")).Text;
+                string description = ((TextBox)elements.FindName("TB_edit_description")).Text;
+                YN required = (YN)((ComboBox)elements.FindName("CB_edit_required")).SelectedItem;
+                string url = ((TextBox)elements.FindName("TB_edit_url")).Text;
 
-        /*        public void syncScheduleViewer()
-                {
-                    // Compare the number of events added to the schedule view to the selected day
-                    LinkedList<SmartTask> taskList;
-                    if (schedule.taskSchedule.TryGetValue(selectedDate, out taskList) && taskList.Count > 0)
-                    {
-                        // Some tasks exist for that day - see how many
-                        if (currentNumTasksInSchedule != taskList.Count)
-                        {
-                            // Tasks don't match! - update list view to reflect the schedule
+                // Create a new task from the schedule
+                SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, title, description, required, url);
 
-                            // Check each item in the taskList to see if it exists in the viewer
-                            for (int i = 0; i < taskList.Count; ++i)
-                            {
-                                // Check the ListView for this item, insert it to LV if it doesn't exist
-                                if (!LV_Schedule.Items.Contains(taskList.ElementAt(i)))
-                                {
-                                    LV_Schedule.Items.Add(taskList.ElementAt(i));
-                                }
-                            }
+                // Remove the existing task
+                ((SmartTask)((Button)sender).DataContext).DeleteTask();
 
-                            // Check each item in the ListView to see if it exists in the taskList
-                            for (int i = 0; i < LV_Schedule.Items.Count; ++i)
-                            {
-                                // Check the taskList for this item, delete it from LV it doesn't exist
-                                if (!taskList.Contains(LV_Schedule.Items.ElementAt(i)))
-                                {
-                                    LV_Schedule.Items.Remove(i);
-                                }
-                            }
+                // Add the updated task back to the schedule
+                schedule.AddTask(newTask);
+            }
+            catch(Exception err)
+            {
+                Debug.WriteLine($"Exception thrown in task update: {err.Message}");
+            }
 
-                            // Sort ListView by descending date
-                            LV_Schedule.Items.OrderBy(task => ((SmartTask)task).when);
-                        }
-                    }
-                    else
-                    {
-                        // There are no tasks for the selected day! Clear the list view
-                        for (int i = LV_Schedule.Items.Count - 1; i >= 0; --i)
-                        {
-                            LV_Schedule.Items.RemoveAt(i);
-                        }
-                    }
+            // Refreshes the schedule viewer display
+            LV_Schedule.ItemsSource = null;
+            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
+        }
 
-                } */
 
 
     } // End of namespace
