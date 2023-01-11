@@ -32,13 +32,15 @@
         <TextBox Name="TB_NewTitle" HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="300" TextWrapping="NoWrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,380,0,0" Text="Desc:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBox Name="TB_NewDescription" HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
-        <TextBlock HorizontalAlignment="Left" Margin="130,450,0,0" Text="URL:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="NoWrap" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="130,490,0,0" Text="Required:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox Margin="240,490,0,0" Width="140" Name="CB_RequiredPicker"/>
-        <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox Margin="220,530,0,0" Width="200" Name="CB_RepeatPicker"/>
-        <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,590,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,450,0,0" Text="Location:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewLocation" HorizontalAlignment="Left" Margin="240,450,0,0" FontSize="14" Width="260" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,490,0,0" Text="URL:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,490,0,0" FontSize="14" Width="300" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Required:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <ComboBox Margin="240,530,0,0" Width="140" Name="CB_RequiredPicker"/>
+        <TextBlock HorizontalAlignment="Left" Margin="130,570,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <ComboBox Margin="220,570,0,0" Width="200" Name="CB_RepeatPicker"/>
+        <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,630,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
         <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top" VerticalScrollMode="Enabled">
             <ListView Name="LV_Schedule" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ListView.ItemTemplate>
@@ -52,11 +54,10 @@
                                 <Rectangle Margin="0,0,0,0" Height="18" Width="18" Fill="{x:Bind calendar.color}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <TextBlock Margin="5,0,0,0" Text="{x:Bind TimeString}" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" MaxWidth="390" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <!--<TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}" MaxWidth="250"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
                             </StackPanel>
-                            <StackPanel x:Name="SP_TaskDesc" Visibility="Visible" Grid.Row="1" Grid.Column="0" Margin="0,0,0,10" Orientation="Horizontal">
-                                <TextBlock x:Name="TB_TaskDescBlock" Text="{x:Bind description}" TextWrapping="WrapWholeWords" MaxWidth="590" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            </StackPanel>
+                            <!--<StackPanel MinHeight="0" x:Name="SP_TaskDesc" Visibility="Visible" Grid.Row="1" Grid.Column="0" Margin="0,0,0,10" Orientation="Horizontal">-->
+                                <TextBlock x:Name="TB_TaskDescDisplayBlock" Grid.Row="1" Text="{x:Bind descDisplay}" TextWrapping="WrapWholeWords" MinHeight="0" MaxWidth="590" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <!--</StackPanel>-->
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,5,0" HorizontalAlignment="Right" Content="Delete" Click="PB_DeleteSelectedTask" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,70,0" HorizontalAlignment="Right" Content="Edit" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
                                 <Button.Flyout>
@@ -66,6 +67,7 @@
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition MinHeight="35" MaxHeight="85"/>
+                                                <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
@@ -105,11 +107,13 @@
                                             </Viewbox>
                                             <TextBlock Grid.Row="7" Grid.Column="0" Text="URL:" VerticalAlignment="Center"/>
                                             <TextBox Grid.Row="7" Grid.Column="1" Text="{x:Bind url}" VerticalAlignment="Center" x:Name="TB_edit_url"/>
-                                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Required:" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Bind calendar.ynList}" SelectedItem="{x:Bind required}" x:Name="CB_edit_required" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
-                                            <TextBlock Grid.Row="9" Grid.Column="0" Text="Repeat:" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Bind calendar.repeatTypeList}" SelectedItem ="{x:Bind repeatType}" x:Name="CB_edit_repeat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
-                                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Content="Save Update" VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="PB_UpdateSelectedTask"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Location:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="8" Grid.Column="1" Text="{x:Bind location}" VerticalAlignment="Center" x:Name="TB_edit_location"/>
+                                            <TextBlock Grid.Row="9" Grid.Column="0" Text="Required:" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Bind calendar.ynList}" SelectedItem="{x:Bind required}" x:Name="CB_edit_required" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
+                                            <TextBlock Grid.Row="10" Grid.Column="0" Text="Repeat:" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{x:Bind calendar.repeatTypeList}" SelectedItem ="{x:Bind repeatType}" x:Name="CB_edit_repeat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
+                                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Content="Save Update" VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="PB_UpdateSelectedTask"/>
 
 
                                         </Grid>

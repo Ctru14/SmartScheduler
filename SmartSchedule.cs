@@ -72,7 +72,7 @@ namespace SmartScheduler
             dateCreated = DateTime.Now;
             calID = id; // Randomly created 
             numTasks = 0;
-            storageKeys = new List<string>(); // Stored as one continuous string separated by spaces in memory
+            storageKeys = new List<string>(); // Stored as one continuous string separated by ` in memory
             startupSettings = container;
 
             // Store the new schedule data in the application storage
@@ -138,7 +138,7 @@ namespace SmartScheduler
         }
 
         // Creates and returns the SmartTask object in the respected schedule, but DOES NOT ADD IT TO THE SCHEDULE
-        public SmartTask CreateTask(uint eventID, DateTimeOffset date, int hour, int minute, int durHour, int durMinute, TaskType taskType, RepeatType repeatType, string title, string description, YN required, string url)
+        public SmartTask CreateTask(uint eventID, DateTimeOffset date, int hour, int minute, int durHour, int durMinute, TaskType taskType, RepeatType repeatType, string title, string description, YN required, string location, string url)
         {
             // Create SmartTask object out of the text fields
             SmartTask newTask = new SmartTask(eventID, this);
@@ -154,6 +154,7 @@ namespace SmartScheduler
             newTask.description = description;
             newTask.required = required;
             newTask.timeRemaining = newTask.duration = new TimeSpan(durHour, durMinute, 0);
+            newTask.location = location;
             newTask.url = url;
 
             // Creates the SmartTask item

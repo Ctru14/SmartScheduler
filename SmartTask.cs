@@ -37,7 +37,7 @@ namespace SmartScheduler
         {
             // Creating a new SmartTask object given its fields
             this.ID = newID;
-            this.calendar = null;
+            this.calendar = cal; // Why was this set to null..?
 
         }
 
@@ -78,6 +78,7 @@ namespace SmartScheduler
                 this.timeRemaining = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["timeRemaining"]);
                 this.required = (YN)taskComposite["required"];
                 this.description = (string)taskComposite["description"];
+                this.location = (string)taskComposite["location"];
                 this.url = (string)taskComposite["url"];
             }
             catch (Exception e)
@@ -133,10 +134,39 @@ namespace SmartScheduler
         public YN required { get; set; }
 
         public string title { get; set; }
-        
+
         public string description { get; set; }
 
+        public string location { get; set; }
+
         public string url { get; set; }
+
+        public string descDisplay
+        {
+            get
+            {
+                string rtn = "";
+                if (description.Length > 0)
+                {
+                    rtn += description + "\n";
+                }
+                if (location.Length > 0)
+                {
+                    rtn += location + "\n";
+                }
+                if (url.Length > 0)
+                {
+                    rtn += url;
+                }
+
+                if (rtn.Length == 0)
+                {
+                    rtn = null;
+                }
+
+                return rtn;
+            }
+        }
 
         public SmartSchedule calendar; // Reference to the calendar which owns the event
 
@@ -165,6 +195,7 @@ namespace SmartScheduler
             currentTaskComposite["required"] = (int)this.required;
             currentTaskComposite["title"] = this.title;
             currentTaskComposite["description"] = this.description;
+            currentTaskComposite["location"] = this.location;
             currentTaskComposite["url"] = this.url;
             currentTaskComposite["calendar"] = this.calendar.StorageID();
             tasksContainer.Values[StorageID()] = currentTaskComposite;

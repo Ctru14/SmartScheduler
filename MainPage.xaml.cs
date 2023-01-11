@@ -219,7 +219,7 @@ namespace SmartScheduler
             YN required = (YN) CB_RequiredPicker.SelectedValue;
 
             // Create a new task from the schedule
-            SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, TB_NewTitle.Text, TB_NewDescription.Text, required, TB_NewURL.Text);
+            SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, TB_NewTitle.Text, TB_NewDescription.Text, required, TB_NewLocation.Text, TB_NewURL.Text);
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
@@ -266,10 +266,11 @@ namespace SmartScheduler
                 string title = ((TextBox)elements.FindName("TB_edit_title")).Text;
                 string description = ((TextBox)elements.FindName("TB_edit_description")).Text;
                 YN required = (YN)((ComboBox)elements.FindName("CB_edit_required")).SelectedItem;
+                string location = ((TextBox)elements.FindName("TB_edit_location")).Text;
                 string url = ((TextBox)elements.FindName("TB_edit_url")).Text;
 
                 // Create a new task from the schedule
-                SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, title, description, required, url);
+                SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, title, description, required, location, url);
 
                 // Remove the existing task
                 ((SmartTask)((Button)sender).DataContext).DeleteTask();
