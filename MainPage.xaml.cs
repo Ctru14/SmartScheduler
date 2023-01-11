@@ -62,7 +62,7 @@ namespace SmartScheduler
             {
                 startupSettings = localSettings.CreateContainer("startup", ApplicationDataCreateDisposition.Existing);
             }
-            catch (Exception e)
+            catch //(Exception e)
             {
                 // Startup settings have never been created! Create a new Schedule data structure
                 System.Diagnostics.Debug.WriteLine("Creating ApplicationData in localSettings for new schedule");

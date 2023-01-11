@@ -27,13 +27,13 @@
         <TextBlock HorizontalAlignment="Left" Margin="445,265,0,0" Text="mins" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="130,300,0,0" Text="Type:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <ComboBox Margin="200,300,0,0" Width="180" Name="CB_TypePicker"/>
+        <ComboBox Margin="200,300,0,0" Width="240" Name="CB_TypePicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,340,0,0" Text="Title:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox Name="TB_NewTitle" HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="200" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewTitle" HorizontalAlignment="Left" Margin="200,340,0,0" FontSize="14" Width="300" TextWrapping="NoWrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,380,0,0" Text="Desc:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBox Name="TB_NewDescription" HorizontalAlignment="Left" Margin="200,380,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" Height="64"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,450,0,0" Text="URL:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="TB_NewURL" HorizontalAlignment="Left" Margin="200,450,0,0" FontSize="14" Width="300" TextWrapping="NoWrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,490,0,0" Text="Required:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="240,490,0,0" Width="140" Name="CB_RequiredPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,530,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
@@ -44,11 +44,18 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:SmartTask">
                         <Grid HorizontalAlignment="Stretch" Width="600" Margin="0,0,0,5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition MinHeight="0"/>
+                            </Grid.RowDefinitions>
                             <StackPanel x:Name="SP_TaskData" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0" Orientation="Horizontal" Height="22">
                                 <Rectangle Margin="0,0,0,0" Height="18" Width="18" Fill="{x:Bind calendar.color}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <TextBlock Margin="5,0,0,0" Text="{x:Bind TimeString}" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" MaxWidth="390" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <!--<TextBlock Margin="5,0,0,0" x:Name="TB_TaskDescBlock" Text="{x:Bind description}" MaxWidth="250"  FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
+                            </StackPanel>
+                            <StackPanel x:Name="SP_TaskDesc" Visibility="Visible" Grid.Row="1" Grid.Column="0" Margin="0,0,0,10" Orientation="Horizontal">
+                                <TextBlock x:Name="TB_TaskDescBlock" Text="{x:Bind description}" TextWrapping="WrapWholeWords" MaxWidth="590" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </StackPanel>
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,5,0" HorizontalAlignment="Right" Content="Delete" Click="PB_DeleteSelectedTask" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,70,0" HorizontalAlignment="Right" Content="Edit" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
