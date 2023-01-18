@@ -9,12 +9,11 @@
     RequestedTheme="Dark"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Margin="0,1,0,-1">
         <TextBlock x:Name="TB_Title" HorizontalAlignment="Center" Margin="0,25,0,0" Text="Smart Scheduler" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontSize="32" RequestedTheme="Default"/>
-        <CalendarView SelectedDatesChanged="CV_MainCalendar_SelectedDatesChanged" Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left"/>
         <TextBlock Name="TB_DaySchedule" FontSize="36" Text="Schedule:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="900,120,200,0"/>
 
-
+        <!--New event menu-->
         <TextBlock HorizontalAlignment="Left" Margin="120,120,0,0" Text="Create New Item:" FontSize="36" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,180,0,0" Text="Date:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <CalendarDatePicker Name="CDP_NewItemDate" Margin="200,180,0,0" VerticalAlignment="Top" AllowDrop="True" PlaceholderText="Select a date" />
@@ -25,7 +24,6 @@
         <TextBlock HorizontalAlignment="Left" Margin="325,265,0,0" Text="hrs" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
         <ComboBox Margin="360,260,0,0" Width="80" Name="CB_DurMinsPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="445,265,0,0" Text="mins" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
-
         <TextBlock HorizontalAlignment="Left" Margin="130,300,0,0" Text="Type:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="200,300,0,0" Width="240" Name="CB_TypePicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,340,0,0" Text="Title:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
@@ -40,7 +38,14 @@
         <ComboBox Margin="240,530,0,0" Width="140" Name="CB_RequiredPicker"/>
         <TextBlock HorizontalAlignment="Left" Margin="130,570,0,0" Text="Repeat:" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <ComboBox Margin="220,570,0,0" Width="200" Name="CB_RepeatPicker"/>
-        <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,630,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
+        <TextBox Name="TB_NewRepeatTimes" HorizontalAlignment="Left" Margin="220,610,0,0" FontSize="14" Width="140" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="360,610,0,0" Text=" times" FontSize="24" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Name="PB_AddToSchedule" Content="Add to schedule" Margin="150,670,0,0"  VerticalAlignment="Top" Height="45" Width="251" FontFamily="Verdana" FontSize="24" Click="PB_AddToSchedule_Click"/>
+
+        <!--Calendar date picker-->
+        <CalendarView SelectedDatesChanged="CV_MainCalendar_SelectedDatesChanged" Name="CV_MainCalendar" Margin="550,140,0,0" VerticalAlignment="Top" Height="382" Width="301" HorizontalAlignment="Left"/>
+
+        <!--Schedule viewer!-->
         <ScrollViewer Height="760" Margin="900,180,100,0" VerticalAlignment="Top" VerticalScrollMode="Enabled">
             <ListView Name="LV_Schedule" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ListView.ItemTemplate>
@@ -56,13 +61,15 @@
                                 <TextBlock Margin="5,0,0,0" x:Name="TB_TaskTitleBlock" Text="{x:Bind title}" MaxWidth="390" FontWeight="Bold" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </StackPanel>
                             <!--<StackPanel MinHeight="0" x:Name="SP_TaskDesc" Visibility="Visible" Grid.Row="1" Grid.Column="0" Margin="0,0,0,10" Orientation="Horizontal">-->
-                                <TextBlock x:Name="TB_TaskDescDisplayBlock" Grid.Row="1" Text="{x:Bind descDisplay}" TextWrapping="WrapWholeWords" MinHeight="0" MaxWidth="590" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TB_TaskDescDisplayBlock" Grid.Row="1" Text="{x:Bind descDisplay}" TextWrapping="WrapWholeWords" MinHeight="0" MaxWidth="590" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <!--TODO: Can I set a trigger to make this TextBlock hidden when text is empty?-->
+                            </TextBlock>
                             <!--</StackPanel>-->
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,5,0" HorizontalAlignment="Right" Content="Delete" Click="PB_DeleteSelectedTask" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
                             <Button Grid.Row="0" Grid.Column="1" Margin="0,0,70,0" HorizontalAlignment="Right" Content="Edit" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center">
                                 <Button.Flyout>
                                     <Flyout>
-                                        <Grid MinWidth="150" MaxWidth="300">
+                                        <Grid MinWidth="150" MaxWidth="320">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
@@ -76,44 +83,47 @@
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
                                                 <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="80"/>
-                                                <ColumnDefinition MinWidth="150" MaxWidth="300"/>
+                                                <ColumnDefinition MinWidth="150" MaxWidth="220"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Editing Task" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind title}" x:Name="TB_edit_title" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind title}" x:Name="TB_edit_title" VerticalAlignment="Center" Width="220"/>
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Description:" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Bind description}" x:Name="TB_edit_description" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MinHeight="35" MaxHeight="65" MinWidth="150" MaxLength="200"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Bind description}" x:Name="TB_edit_description" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MinHeight="35" MaxHeight="65" Width="220" MaxLength="200"/>
                                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Type:" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Bind calendar.taskTypeList}" SelectedItem="{x:Bind taskType}" x:Name="CB_edit_taskType" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
+                                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Bind calendar.taskTypeList}" SelectedItem="{x:Bind taskType}" x:Name="CB_edit_taskType" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="30"/>
                                             <TextBlock Grid.Row="4" Grid.Column="0" Text="Date:" VerticalAlignment="Center"/>
-                                            <Viewbox Grid.Row="4" Grid.Column="1" Width="200" Height="35" VerticalAlignment="Center">
-                                                <CalendarDatePicker Date="{x:Bind when.Date}" Width="200" x:Name="CDP_edit_date" DateFormat="{}{month.full} {day.integer}, {year.full}"/>
+                                            <Viewbox Grid.Row="4" Grid.Column="1" Width="220" Height="35" VerticalAlignment="Center">
+                                                <CalendarDatePicker Date="{x:Bind when.Date}" Width="220" x:Name="CDP_edit_date" DateFormat="{}{month.full} {day.integer}, {year.full}"/>
                                             </Viewbox>
                                             <TextBlock Grid.Row="5" Grid.Column="0" Text="Time:" VerticalAlignment="Center"/>
-                                            <Viewbox Grid.Row="5" Grid.Column="1" Width="200" Height="35" VerticalAlignment="Center">
+                                            <Viewbox Grid.Row="5" Grid.Column="1" Width="220" Height="35" VerticalAlignment="Center">
                                                 <TimePicker Time="{x:Bind when.TimeOfDay}" x:Name="TP_edit_time"/>
                                             </Viewbox>
                                             <TextBlock Grid.Row="6" Grid.Column="0" Text="Duration:" VerticalAlignment="Center"/>
-                                            <Viewbox Grid.Row="6" Grid.Column="1" Width="200" Height="30">
+                                            <Viewbox Grid.Row="6" Grid.Column="1" Width="220" Height="30">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ComboBox Width="78" SelectedItem="{x:Bind duration.Hours}" ItemsSource="{x:Bind hrs}" x:Name="TB_edit_durHours"/>
+                                                    <ComboBox Margin="-5,0,0,0" Width="80" SelectedItem="{x:Bind duration.Hours}" ItemsSource="{x:Bind hrs}" x:Name="TB_edit_durHours" HorizontalAlignment="Left"/>
                                                     <TextBlock Margin="3,0,0,0" HorizontalAlignment="Left" Text="hrs" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
-                                                    <ComboBox Margin="3,0,0,0" Width="78" SelectedItem="{x:Bind duration.Minutes}" ItemsSource="{x:Bind mns}" x:Name="TB_edit_durMins"/>
+                                                    <ComboBox Margin="8,0,0,0" Width="80" HorizontalAlignment="Left" SelectedItem="{x:Bind duration.Minutes}" ItemsSource="{x:Bind mns}" x:Name="TB_edit_durMins"/>
                                                     <TextBlock Margin="3,0,0,0" HorizontalAlignment="Left" Text="mins" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.795"/>
                                                 </StackPanel>
                                             </Viewbox>
                                             <TextBlock Grid.Row="7" Grid.Column="0" Text="URL:" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="7" Grid.Column="1" Text="{x:Bind url}" VerticalAlignment="Center" x:Name="TB_edit_url"/>
+                                            <TextBox Grid.Row="7" Grid.Column="1" Text="{x:Bind url}" Width="220" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="TB_edit_url"/>
                                             <TextBlock Grid.Row="8" Grid.Column="0" Text="Location:" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="8" Grid.Column="1" Text="{x:Bind location}" VerticalAlignment="Center" x:Name="TB_edit_location"/>
+                                            <TextBox Grid.Row="8" Grid.Column="1" Text="{x:Bind location}" Width="220" VerticalAlignment="Center" x:Name="TB_edit_location"/>
                                             <TextBlock Grid.Row="9" Grid.Column="0" Text="Required:" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Bind calendar.ynList}" SelectedItem="{x:Bind required}" x:Name="CB_edit_required" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
+                                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Bind calendar.ynList}" SelectedItem="{x:Bind required}" x:Name="CB_edit_required" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="30"/>
                                             <TextBlock Grid.Row="10" Grid.Column="0" Text="Repeat:" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{x:Bind calendar.repeatTypeList}" SelectedItem ="{x:Bind repeatType}" x:Name="CB_edit_repeat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"/>
-                                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Content="Save Update" VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="PB_UpdateSelectedTask"/>
+                                            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{x:Bind calendar.repeatTypeList}" SelectedItem ="{x:Bind repeatType}" x:Name="CB_edit_repeat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="30"/>
+                                            <TextBox Grid.Row="11" Grid.Column="1" Text="{x:Bind repeatNumTimes}" x:Name="TB_edit_repeatNumTimes" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"/>
+                                            <TextBlock Grid.Row="11" Grid.Column="1" Text="times" Margin="105,0,0,0" HorizontalAlignment="left" VerticalAlignment="Center" Width="220"/>
+                                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Content="Save Update" VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="PB_UpdateSelectedTask"/>
 
 
                                         </Grid>
@@ -126,12 +136,11 @@
             </ListView>
         </ScrollViewer>
         <TextBlock Name="TB_AsteriskDate" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="328,182,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskTime" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="444,224,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskDuration" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="487,260,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskType" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="384,303,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskTitle" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="405,340,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskRequired" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="385,493,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
-        <TextBlock Name="TB_AsteriskRepeat" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="420,534,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskTime" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="445,224,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskDuration" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="482,262,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskType" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="445,303,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskTitle" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="505,340,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Name="TB_AsteriskRepeatTimes" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="430,614,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="10" Foreground="Red" FontSize="24" TextAlignment="Center"/>
         <TextBlock Name="TB_RequiredFields" IsColorFontEnabled="True"  HorizontalAlignment="Left" Margin="138,642,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="249" Foreground="Red" FontSize="16" TextAlignment="Left"/>
         
     </Grid>

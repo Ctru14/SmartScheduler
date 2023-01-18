@@ -77,14 +77,14 @@ namespace SmartScheduler
                 scheduleStorageID = schedule.StorageID();
 
                 // Store these values into the startup settings
-             //   startupSettings = new ApplicationDataCompositeValue();
+                //   startupSettings = new ApplicationDataCompositeValue();
                 startupSettings.Values["nextEventID"] = nextEventID; // Events always start at 1
                 startupSettings.Values["scheduleStorageID"] = scheduleStorageID;
                 scheduleData = startupSettings.CreateContainer(scheduleStorageID, ApplicationDataCreateDisposition.Always);
-                 //startupSettings.Values[scheduleStorageID] = scheduleData;
-                 //localSettings.Values["startup"] = startupSettings;
-                
-                    
+                //startupSettings.Values[scheduleStorageID] = scheduleData;
+                //localSettings.Values["startup"] = startupSettings;
+
+
             }
             if (opened)
             {
@@ -104,7 +104,9 @@ namespace SmartScheduler
             CB_DurHoursPicker.ItemsSource = SmartTask.hours;
             CB_DurMinsPicker.ItemsSource = SmartTask.mins;
             LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate.Date);
-            selectedDate = DateTime.Now;
+            selectedDate = DateTime.Now.Date;
+
+            RefreshScheduleView();
 
         }
 
@@ -129,16 +131,20 @@ namespace SmartScheduler
                 filled = false;
                 TB_AsteriskTitle.Text = "*";
             } 
-            else 
+            else
+            {
                 TB_AsteriskTitle.Text = ""; 
+            }
 
             // Date
             if (!CDP_NewItemDate.Date.HasValue)
             {
                 filled = false;
                 TB_AsteriskDate.Text = "*";
-            } else 
+            } else
+            {
                 TB_AsteriskDate.Text = "";
+            }
 
             // Task type
             if (CB_TypePicker.SelectedItem == null)
@@ -147,52 +153,82 @@ namespace SmartScheduler
                 TB_AsteriskType.Text = "*";
             }
             else
+            {
                 TB_AsteriskType.Text = "";
+            }
 
-            // Duration is not required for a FullDay event
-            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && CB_DurHoursPicker == null)
+            // Duration 
+            if (CB_DurHoursPicker.SelectedItem == null &&
+                CB_TypePicker.SelectedItem != null && (TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay) // duration is not required for a FullDay event
             {
                 filled = false;
                 TB_AsteriskDuration.Text = "*";
             }
             else
+            {
                 TB_AsteriskDuration.Text = "";
+            }
 
             // Duration is not required for a FullDay event
-            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && CB_DurMinsPicker == null)
+            if (CB_DurMinsPicker.SelectedItem == null &&
+                CB_TypePicker.SelectedItem != null && (TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay)
             {
                 filled = false;
                 TB_AsteriskDuration.Text = "*";
             }
             else
+            {
                 TB_AsteriskDuration.Text = "";
+            }
 
             // Time
-            if ((TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay && !TP_NewItemTime.SelectedTime.HasValue)
+            if (!TP_NewItemTime.SelectedTime.HasValue &&
+                CB_TypePicker.SelectedItem != null && (TaskType)CB_TypePicker.SelectedItem != TaskType.FullDay)
             {
                 filled = false;
                 TB_AsteriskTime.Text = "*";
             }
             else
+            {
                 TB_AsteriskTime.Text = "";
+            }
 
             // Required?
+            // *** Assume no selection means Yes required ***
             if (CB_RequiredPicker.SelectedValue == null)
             {
-                filled = false;
-                TB_AsteriskRequired.Text = "*";
+                CB_RequiredPicker.SelectedValue = YN.Yes;
             }
-            else
-                TB_AsteriskRequired.Text = "";
 
             // Repeat
+            // *** Assume no selection means None repeat ***
             if (CB_RepeatPicker.SelectedValue == null)
             {
-                filled = false;
-                TB_AsteriskRepeat.Text = "*";
+                CB_RepeatPicker.SelectedValue = RepeatType.None;
             }
-            else
-                TB_AsteriskRepeat.Text = "";
+
+            // Repeat #times
+            // TODO - make repeat events show up in repeated days!
+            int repeatNumTimes = 1;
+            if (CB_RepeatPicker.SelectedValue != null && (RepeatType)CB_RepeatPicker.SelectedValue != RepeatType.None)
+            {
+                // Repeat is selected - we need to parse the number of times // TODO
+                try
+                {
+                    repeatNumTimes = int.Parse(TB_NewRepeatTimes.Text);
+                    if (repeatNumTimes < 1)
+                    {
+                        throw new Exception("Value of repeat times must be at least 1");
+                    }
+                    TB_AsteriskRepeatTimes.Text = "";
+                }
+                catch (FormatException fe)
+                {
+                    Debug.WriteLine($"Improper event repeat input: Exception = {fe}");
+                    filled = false;
+                    TB_AsteriskRepeatTimes.Text = "*";
+                }
+            }
 
 
             if (!filled)
@@ -207,19 +243,29 @@ namespace SmartScheduler
 
             // Get full DateTime from composite boxes
             DateTimeOffset date = CDP_NewItemDate.Date.Value;
-            int hour = TP_NewItemTime.SelectedTime.Value.Hours;
-            int minute = TP_NewItemTime.SelectedTime.Value.Minutes;
+            int hour = 0, minute = 0;
+            if (TP_NewItemTime.SelectedTime != null)
+            {
+                hour = TP_NewItemTime.SelectedTime.Value.Hours;
+                minute = TP_NewItemTime.SelectedTime.Value.Minutes;
+            }
             DateTime when = new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
 
             // Get duration
-            int durHour = (int)CB_DurHoursPicker.SelectedItem;
-            int durMinute = (int)CB_DurMinsPicker.SelectedItem;
+            int durHour = 0, durMinute = 0;
+            if (CB_DurHoursPicker.SelectedItem != null)
+            {
+                durHour = (int)CB_DurHoursPicker.SelectedItem;
+                durMinute = (int)CB_DurMinsPicker.SelectedItem;
+            }
+
+            // Type classification
             TaskType taskType = (TaskType) CB_TypePicker.SelectedValue;
-            RepeatType repeatType = (RepeatType) CB_RepeatPicker.SelectedValue;
-            YN required = (YN) CB_RequiredPicker.SelectedValue;
+            RepeatType repeatType = CB_RepeatPicker.SelectedValue == null ? RepeatType.None : (RepeatType) CB_RepeatPicker.SelectedValue;
+            YN required = CB_RequiredPicker.SelectedValue == null ? YN.Yes : (YN) CB_RequiredPicker.SelectedValue;
 
             // Create a new task from the schedule
-            SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, TB_NewTitle.Text, TB_NewDescription.Text, required, TB_NewLocation.Text, TB_NewURL.Text);
+            SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, repeatNumTimes, TB_NewTitle.Text, TB_NewDescription.Text, required, TB_NewLocation.Text, TB_NewURL.Text);
 
             // Add to global schedule variable
             schedule.AddTask(newTask);
@@ -227,6 +273,7 @@ namespace SmartScheduler
             if (selectedDate.Date == when.Date)
             {
                 //Update the ListView viewer when adding a new task to the current date
+                Debug.WriteLine($"Selected: {selectedDate.Date}, when: {when.Date}");
                 RefreshScheduleView();
             }
 
@@ -256,6 +303,9 @@ namespace SmartScheduler
             // Retrieve each field from the edit menu
             try
             {
+                SmartTask existingTask = (SmartTask)((Button)sender).DataContext;
+
+                // Null fields were handled when creating the tasks, so these should have selections
                 DateTimeOffset date = (DateTimeOffset)((CalendarDatePicker)elements.FindName("CDP_edit_date")).Date;
                 int hour = (int)((TimePicker)elements.FindName("TP_edit_time")).SelectedTime.Value.Hours;
                 int minute = (int)((TimePicker)elements.FindName("TP_edit_time")).SelectedTime.Value.Minutes;
@@ -269,11 +319,27 @@ namespace SmartScheduler
                 string location = ((TextBox)elements.FindName("TB_edit_location")).Text;
                 string url = ((TextBox)elements.FindName("TB_edit_url")).Text;
 
+                string repeatNumTimesText = ((TextBox)elements.FindName("TB_edit_repeatNumTimes")).Text;
+                int repeatNumTimes;
+                try
+                {
+                    repeatNumTimes = int.Parse(repeatNumTimesText);
+                }
+                catch
+                {
+                    repeatNumTimes = -1;
+                }
+
+                if (repeatNumTimes < 1)
+                {
+                    repeatNumTimes = existingTask.repeatNumTimes;
+                }
+
                 // Create a new task from the schedule
-                SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, title, description, required, location, url);
+                SmartTask newTask = schedule.CreateTask(nextEventID++, date, hour, minute, durHour, durMinute, taskType, repeatType, repeatNumTimes, title, description, required, location, url);
 
                 // Remove the existing task
-                ((SmartTask)((Button)sender).DataContext).DeleteTask();
+                existingTask.DeleteTask();
 
                 // Add the updated task back to the schedule
                 schedule.AddTask(newTask);
@@ -289,13 +355,14 @@ namespace SmartScheduler
         public void RefreshScheduleView()
         {
             // Refreshes the schedule viewer display
+            Debug.WriteLine($"RefreshScheduleView: date {selectedDate}");
             LV_Schedule.ItemsSource = null;
-            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate);
+            LV_Schedule.ItemsSource = schedule.GetTastsAt(selectedDate.Date);
         }
 
 
 
-    } // End of namespace
+    } // End of SmartScheduler namespace
 
 
 }

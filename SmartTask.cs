@@ -72,20 +72,22 @@ namespace SmartScheduler
                 this.title = (string)taskComposite["title"];
                 this.taskType = (TaskType)taskComposite["taskType"];
                 this.repeatType = (RepeatType)taskComposite["repeatType"];
-                this.customRepeat = null; //TODO: do this - taskComposite["customRepeat"];
+                //this.repeatDates = null; //TODO: do this - taskComposite["repeatDates"];
                 this.when = DataStorageTransformations.DateTime_FromStorageString((string)taskComposite["when"]);
                 this.duration = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["duration"]);
                 this.timeRemaining = DataStorageTransformations.TimeSpan_FromStorageString((string)taskComposite["timeRemaining"]);
                 this.required = (YN)taskComposite["required"];
                 this.description = (string)taskComposite["description"];
-                this.location = (string)taskComposite["location"];
                 this.url = (string)taskComposite["url"];
+                this.location = (string)taskComposite["location"];
+                this.repeatNumTimes = taskComposite["repeatNumTimes"] == null ? 1 : (int)taskComposite["repeatNumTimes"];
             }
             catch (Exception e)
             {
                 Debug.WriteLine($"Error when reading task from memory: {e}\nPrinting {taskComposite.Count} task values:");
                 foreach (object val in taskComposite) Debug.WriteLine($"{val}");
             }
+            this.SetRepeatDates();
         }
 
         public static readonly int[] hours = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -95,8 +97,8 @@ namespace SmartScheduler
         public static readonly int[] mins = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
 
         public readonly int[] hrs = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                              10,11,12,13,14,15,16,17,18,19,
-                                              20,21,22,23,24 };
+                                     10,11,12,13,14,15,16,17,18,19,
+                                     20,21,22,23,24 };
 
         public readonly int[] mns = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
 
@@ -106,7 +108,9 @@ namespace SmartScheduler
 
         public RepeatType repeatType { get; set; }
 
-        public List<DateTime> customRepeat { get; set; }
+        public int repeatNumTimes { get; set; }
+
+        public List<DateTime> repeatDates { get; set; }
 
         // Time arguments functions differently for events and tasks
         //   TimedEvent: when = start time, duration = duration of event
@@ -146,21 +150,37 @@ namespace SmartScheduler
             get
             {
                 string rtn = "";
+                bool content = false;
+
                 if (description.Length > 0)
                 {
-                    rtn += description + "\n";
-                }
-                if (location.Length > 0)
-                {
-                    rtn += location + "\n";
-                }
-                if (url.Length > 0)
-                {
-                    rtn += url;
+                    rtn += description;
+                    content = true;
                 }
 
-                if (rtn.Length == 0)
+                if (location.Length > 0)
                 {
+                    if (content)
+                    {
+                        rtn += "\n";
+                    }
+                    rtn += location;
+                    content = true;
+                }
+
+                if (url.Length > 0)
+                {
+                    if (content)
+                    {
+                        rtn += "\n";
+                    }
+                    rtn += url;
+                    content = true;
+                }
+
+                if (!content)
+                {
+                    //Debug.WriteLine($"SmartTask ({title}) event description display (descDisplay) empty, returning null");
                     rtn = null;
                 }
 
@@ -175,9 +195,9 @@ namespace SmartScheduler
         {
             // Format: "<ScheduleID>-<TaskID>-<MMDDYYYY(from 'when')>-<Up to first 8 chars of title>
             string s = "T-";
-            s += (calendar.calID + "-");
-            s += (ID + "-");
-            s += (when.ToString("MM") + when.ToString("dd") + when.ToString("yyyy"));
+            s += calendar.calID + "-";
+            s += ID + "-";
+            s += when.ToString("MM") + when.ToString("dd") + when.ToString("yyyy");
             s += title.Length > 8 ? title.Substring(0,9) : title;
             return s;
         }
@@ -188,7 +208,8 @@ namespace SmartScheduler
             currentTaskComposite["ID"] = this.ID;
             currentTaskComposite["taskType"] = (int)this.taskType;
             currentTaskComposite["repeatType"] = (int)this.repeatType;
-            currentTaskComposite["customRepeat"] = "";
+            currentTaskComposite["repeatNumTimes"] = this.repeatNumTimes;
+            //currentTaskComposite["repeatDates"] = "";
             currentTaskComposite["when"] = DataStorageTransformations.DateTime_ToStorageString(this.when);
             currentTaskComposite["duration"] = DataStorageTransformations.TimeSpan_ToStorageString(this.duration);
             currentTaskComposite["timeRemaining"] = DataStorageTransformations.TimeSpan_ToStorageString(this.timeRemaining);
@@ -201,13 +222,72 @@ namespace SmartScheduler
             tasksContainer.Values[StorageID()] = currentTaskComposite;
         }
 
+        public void SetRepeatDates()
+        {
+            DateTime date = this.when;
+            this.repeatDates = new List<DateTime>();
+
+            if (this.repeatNumTimes < 1)
+            {
+                repeatNumTimes = 1;
+            }
+
+            switch(this.repeatType)
+            {
+                case RepeatType.Daily:
+                    //Debug.WriteLine($"Generating daily repeat for task {ID}:");
+                    for (int i = 0; i < this.repeatNumTimes; ++i)
+                    {
+                        repeatDates.Add(date);
+                        date = date.AddDays(1);
+                    }
+                    break;
+                case RepeatType.Weekly:
+                    //Debug.WriteLine($"Generating weekly repeat for task {ID}:");
+                    for (int i = 0; i < this.repeatNumTimes; ++i)
+                    {
+                        repeatDates.Add(date);
+                        date = date.AddDays(7);
+                    }
+                    break;
+                case RepeatType.Monthly:
+                    //Debug.WriteLine($"Generating monthly repeat for task {ID}:");
+                    for (int i = 0; i < this.repeatNumTimes; ++i)
+                    {
+                        repeatDates.Add(date);
+                        date = date.AddMonths(1);
+                    }
+                    Debug.WriteLine(repeatDates);
+                    break;
+                case RepeatType.Yearly:
+                    //Debug.WriteLine($"Generating yearly repeat for task {ID}:");
+                    for (int i = 0; i < this.repeatNumTimes; ++i)
+                    {
+                        repeatDates.Add(date);
+                        date = date.AddYears(1);
+                    }
+                    break;
+                case RepeatType.None:
+                    //Debug.WriteLine($"Generating None repeat for task {ID}:");
+                    repeatDates.Add(date);
+                    break;
+                default:
+                    Debug.WriteLine($"[Unfinished!] Repeat Type {this.repeatType} not yet supported: defaulting to no repeat");
+                    repeatDates.Add(date);
+                    break;
+            }
+        }
+
         
         public override string ToString()
         {
             string str = this.taskType.ToString() + ":  ";
             str += this.title;
-            str += (" " + this.when.ToString("g"));
-            if (taskType == TaskType.TimedEvent) str += (" Dur: " + this.duration);
+            str += " " + this.when.ToString("g");
+            if (taskType == TaskType.TimedEvent)
+            {
+                str += " Dur: " + this.duration;
+            }
             return str;
         }
 
@@ -216,10 +296,16 @@ namespace SmartScheduler
             Debug.WriteLine($"Deleting task {StorageID()} from within task class");
 
             // Remove task's data from calendar and storage
-            if (!calendar.DeleteTask(this)) Debug.WriteLine($"Error deleting task {StorageID()} from {calendar.StorageID()}");
-
+            if (!calendar.DeleteTask(this))
+            {
+                Debug.WriteLine($"Error deleting task {StorageID()} from {calendar.StorageID()} - see above messages");
+            }
         }
 
+        ~SmartTask()
+        {
+            Debug.WriteLine($"Destructor called for task {this.ID}");
+        }
 
     }
 }

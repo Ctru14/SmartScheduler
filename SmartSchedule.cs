@@ -45,8 +45,13 @@ namespace SmartScheduler
             {
                 string keys = "";
                 foreach (string s in storageKeys.ToArray())
+                {
                     keys += s + "`";
-                if (keys.Length > 0) keys = keys.Substring(0, keys.Length - 1);
+                }
+                if (keys.Length > 0)
+                {
+                    keys = keys.Substring(0, keys.Length - 1);
+                }
                 return keys;
             }
         }
@@ -56,8 +61,10 @@ namespace SmartScheduler
             get { return _Title; }
             set
             {
-                // TODO - if title changes, update the app data storage string
-                if (_Title != null) {}
+                if (_Title != null) 
+                {
+                    // TODO - if title changes, update the app data storage string
+                }
                 _Title = value;
             }
         }
@@ -138,7 +145,7 @@ namespace SmartScheduler
         }
 
         // Creates and returns the SmartTask object in the respected schedule, but DOES NOT ADD IT TO THE SCHEDULE
-        public SmartTask CreateTask(uint eventID, DateTimeOffset date, int hour, int minute, int durHour, int durMinute, TaskType taskType, RepeatType repeatType, string title, string description, YN required, string location, string url)
+        public SmartTask CreateTask(uint eventID, DateTimeOffset date, int hour, int minute, int durHour, int durMinute, TaskType taskType, RepeatType repeatType, int repeatNumTimes, string title, string description, YN required, string location, string url)
         {
             // Create SmartTask object out of the text fields
             SmartTask newTask = new SmartTask(eventID, this);
@@ -149,6 +156,7 @@ namespace SmartScheduler
             // Get duration
             newTask.taskType = taskType;
             newTask.repeatType = repeatType;
+            newTask.repeatNumTimes = repeatNumTimes;
             newTask.when = when;
             newTask.title = title;
             newTask.description = description;
@@ -157,6 +165,8 @@ namespace SmartScheduler
             newTask.location = location;
             newTask.url = url;
 
+            newTask.SetRepeatDates();
+
             // Creates the SmartTask item
             return newTask;
         }
@@ -164,54 +174,57 @@ namespace SmartScheduler
         public void AddTask(SmartTask task, bool newToStore = true)
         {
             LinkedList<SmartTask> taskList;
-            DateTime date = task.when.Date;
+            //DateTime date = task.when.Date;
             task.calendar = this;
-
-            // Add new task - inset into LinkedList 
-            if (taskSchedule.TryGetValue(date, out taskList))
+            
+            foreach (DateTime date in task.repeatDates)
             {
-                // Schedule already exists for this day -> add event
-                // Find value in list that it should be inserted after
+                // Add new task - inset into LinkedList 
+                if (taskSchedule.TryGetValue(date.Date, out taskList))
+                {
+                    // Schedule already exists for this day -> add event
+                    // Find value in list that it should be inserted after
 
-                // Check edge case: first and last
-                if (task.when < taskList.First.Value.when)
-                {
-                    // Insert first
-                    taskList.AddFirst(task);
-                } 
-                else if (task.when >= taskList.Last.Value.when)
-                {
-                    // Insert last
-                    taskList.AddLast(task);
+                    // Check edge case: first and last
+                    if (task.when < taskList.First.Value.when)
+                    {
+                        // Insert first
+                        taskList.AddFirst(task);
+                    } 
+                    else if (task.when >= taskList.Last.Value.when)
+                    {
+                        // Insert last
+                        taskList.AddLast(task);
+                    } 
+                    else
+                    {
+                        // Somewhere in the middle
+                        var tasks = taskList.GetEnumerator();
+                        LinkedListNode<SmartTask> prev = taskList.First;
+                        LinkedListNode<SmartTask> next = taskList.First;
+                        //  Loop until times of prev < task < next
+                        do
+                        {
+                            prev = next;
+                            if (next == null)
+                            {
+                                // You've reached the end of the list!
+                                break;
+                            }
+                            next = next.Next;
+
+                        } while (!(prev.Value.when < task.when && task.when < next.Value.when));
+                        taskList.AddAfter(prev, task);
+                    }
+                                    
                 } 
                 else
                 {
-                    // Somewhere in the middle
-                    var tasks = taskList.GetEnumerator();
-                    LinkedListNode<SmartTask> prev = taskList.First;
-                    LinkedListNode<SmartTask> next = taskList.First;
-                    //  Loop until times of prev < task < next
-                    do
-                    {
-                        prev = next;
-                        if (next == null)
-                        {
-                            // You've reached the end of the list!
-                            break;
-                        }
-                        next = next.Next;
-
-                    } while (!(prev.Value.when < task.when && task.when < next.Value.when));
-                    taskList.AddAfter(prev, task);
+                    // This day does not yet exist in our schedule -> create it
+                    taskList = new LinkedList<SmartTask>();
+                    taskList.AddFirst(task);
+                    taskSchedule.Add(date.Date, taskList);
                 }
-                                
-            } 
-            else
-            {
-                // This day does not yet exist in our schedule -> create it
-                taskList = new LinkedList<SmartTask>();
-                taskList.AddFirst(task);
-                taskSchedule.Add(date, taskList);
             }
             numTasks++;
 
@@ -230,7 +243,7 @@ namespace SmartScheduler
         public LinkedList<SmartTask> GetTastsAt(DateTime date)
         {
             LinkedList<SmartTask> taskList;
-            if (this.taskSchedule.TryGetValue(date, out taskList))
+            if (this.taskSchedule.TryGetValue(date.Date, out taskList))
             {
                 return taskList;
             }
@@ -259,19 +272,25 @@ namespace SmartScheduler
             string taskID = task.StorageID();
             string scheduleID = this.StorageID();
 
-            Debug.WriteLine($"(UNFINISHED) Deleting task: {taskID} from schedule {scheduleID}");
-            
+            Debug.WriteLine($"Deleting task: {taskID} from schedule {scheduleID}...");
+
+            // Remove task from SmartSchedule - return value represents whether or not the remove was successful
+            status &= removeTaskFromSchedule(task);
+
             // Retrieve the data from application memory (note: open existing)
             scheduleData = startupSettings.CreateContainer(scheduleID, ApplicationDataCreateDisposition.Existing);
 
             // Remove task key from storage keys
-            if (storageKeys.Contains(taskID)) storageKeys.Remove(taskID);
+            if (storageKeys.Contains(taskID))
+            {
+                status &= storageKeys.Remove(taskID);
+            }
             else
             {
                 Debug.WriteLine($"Unexpected error: {taskID} not found in storage keys!");
                 status = false;
             }
-            scheduleData.Values.Remove("storageKeys");
+            status &= scheduleData.Values.Remove("storageKeys");
             scheduleData.Values["storageKeys"] = storageKeysString;
 
             // Remove task from app storage
@@ -282,10 +301,8 @@ namespace SmartScheduler
             catch (Exception e)
             {
                 Debug.WriteLine($"Error in task delete from SmartSchedule: Task container {taskID} was not found.\nException message: {e.Message}");
+                status = false;
             }
-
-            // Remove task from SmartSchedule - return value represents whether or not the remove was successful
-            status = removeTaskFromSchedule(task) && status;
 
             // Update the UI to reflect a new task added to the schedule
             //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(main_LV_schedule.ItemsSource)));
@@ -297,26 +314,28 @@ namespace SmartScheduler
         public bool removeTaskFromSchedule(SmartTask task) // Returns: T/F on whether or not the remove was successful
         {
             LinkedList<SmartTask> taskList;
-            DateTime date = task.when.Date;
-
-            // Add new task - inset into LinkedList 
-            if (taskSchedule.TryGetValue(date, out taskList))
+            //DateTime date = task.when.Date;
+            bool rtn = true;
+            foreach (DateTime date in task.repeatDates)
             {
-                taskList.Remove(task);
-
-                // Check if that was the only task for that date - if so, remove the list
-                if (taskList.Count == 0)
+                // Add new task - inset into LinkedList 
+                if (taskSchedule.TryGetValue(date.Date, out taskList))
                 {
-                    if (!taskSchedule.Remove(date)) Debug.WriteLine($"Error removing empty schedule at date {date}");
-                }
+                    taskList.Remove(task);
 
-                return true;
+                    // Check if that was the only task for that date - if so, remove the list
+                    if (taskList.Count == 0)
+                    {
+                        if (!taskSchedule.Remove(date)) Debug.WriteLine($"Error removing empty schedule at date {date}");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"Remove Task Error: Task list not found for date {date}");
+                    rtn = false;
+                }
             }
-            else
-            {
-                Debug.WriteLine($"Remove Task Error: Task list not found for date {date}");
-                return false;
-            }
+            return rtn;
 
         }
 
@@ -328,7 +347,7 @@ namespace SmartScheduler
         }
 
 
-    } // End of class definition
+    } // End of SmartSchedule class definition
 
 
 } // End of SmartScheduler namespace
